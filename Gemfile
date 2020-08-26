@@ -88,6 +88,10 @@ end
 
 group :development do
   gem "yard"
+  gem "guard"
+  gem "guard-minitest"
+  gem "pry", "<= 0.12.2" if RUBY_VERSION < '2.4'
+  gem "pry-byebug"
 end
 
 group :test do
