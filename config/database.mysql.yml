@@ -1,0 +1,17 @@
+default: &default
+  adapter: mysql2
+  host: <%= ENV.fetch('DB_HOST', '127.0.0.1') %>
+  username: root
+  password: password
+
+production:
+  <<: *default
+  database: redmine_production
+
+development:
+  <<: *default
+  database: redmine_development
+
+test:
+  <<: *default
+  database: redmine_test

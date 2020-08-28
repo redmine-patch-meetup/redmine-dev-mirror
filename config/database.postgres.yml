@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  host: <%= ENV.fetch('DB_HOST', 'localhost') %>
+  username: postgres
+  password: postgres
+
+production:
+  <<: *default
+  database: redmine_production
+
+development:
+  <<: *default
+  database: redmine_development
+
+test:
+  <<: *default
+  database: redmine_test
