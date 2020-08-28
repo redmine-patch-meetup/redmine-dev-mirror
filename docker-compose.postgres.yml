@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  db:
+    image: postgres:${DB_VERSION:-latest}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      LANG: C.UTF-8
+      POSTGRES_INITDB_ARGS: --locale=C.UTF-8
+      POSTGRES_PASSWORD: postgres
+
+volumes:
+  postgres_data:
