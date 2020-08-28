@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  db:
+    image: mysql:${DB_VERSION:-latest}
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+
+volumes:
+  mysql_data:
