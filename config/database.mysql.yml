@@ -1,6 +1,7 @@
 default: &default
   adapter: mysql2
   host: <%= ENV.fetch('DB_HOST', '127.0.0.1') %>
+  port: <%= ENV.fetch('DB_PORT', '3306') %>
   username: root
   password: password
 

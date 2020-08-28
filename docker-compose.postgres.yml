@@ -9,6 +9,7 @@ services:
     environment:
       LANG: C.UTF-8
       POSTGRES_INITDB_ARGS: --locale=C.UTF-8
+      POSTGRES_PASSWORD: postgres
 
 volumes:
   postgres_data:
