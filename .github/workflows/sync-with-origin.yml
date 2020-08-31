@@ -1,0 +1,28 @@
+name: Sync with redmine/redmine
+
+on:
+  schedule:
+    - cron: "0 19 * * *" # 4 AM JST
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      REPOSITORY_ACCESS_TOKEN: ${{ secrets.REPOSITORY_ACCESS_TOKEN }}
+    steps:
+      - name: Clone redmine
+        run: git clone https://$REPOSITORY_ACCESS_TOKEN@github.com/redmine-patch-meetup/redmine.git
+      - name: Update to latest redmine/redmine master
+        working-directory: ./redmine
+        run: |
+          git checkout master
+          git remote add redmine https://$REPOSITORY_ACCESS_TOKEN@github.com/redmine/redmine.git
+          git fetch redmine
+          git reset --hard redmine/master
+          git push origin master
+          git checkout development
+          git config --global user.email "redmine-patch-meetup@redmine-patch-meetup.com"
+          git config --global user.name "Redmine Patch Meetup"
+          git rebase master
+          git push -f origin development
