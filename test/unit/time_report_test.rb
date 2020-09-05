@@ -24,6 +24,7 @@ class TimeReportTest < ActiveSupport::TestCase
 
   def setup
     User.current = nil
+    TimeEntry.destroy_all
   end
 
   def report_by(criteria)
