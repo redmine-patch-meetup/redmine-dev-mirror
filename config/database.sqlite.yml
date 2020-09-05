@@ -1,0 +1,18 @@
+# Default setup is given for MySQL 5.7.7 or later.
+# Examples for PostgreSQL, SQLite3 and SQL Server can be found at the end.
+# Line indentation must be 2 spaces (no tabs).
+
+default: &default
+ adapter: sqlite3
+
+production:
+  <<: *default
+  database: db/redmine_production.sqlite3
+
+development:
+  <<: *default
+  database: db/redmine_development.sqlite3
+
+test:
+  <<: *default
+  database: db/redmine_test.sqlite3
