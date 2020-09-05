@@ -42,7 +42,7 @@ class TimeReportTest < ActiveSupport::TestCase
 
     result_projects = report.hours.map { |row| row['project']  }
 
-    assert_equal result_projects, [project_a.id, project_b.id]
+    assert_equal [project_a.id, project_b.id], result_projects
   end
 
   # TODO: This test is passing. Why???
