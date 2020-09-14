@@ -1,0 +1,32 @@
+name: Create Patch
+
+on:
+  push:
+    branches-ignore:
+      - master
+      - development
+
+jobs:
+  create-patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create Patch
+        run: |
+          git rev-parse --abbrev-ref HEAD > .branch-name
+          git checkout development
+          git checkout -b patch
+          git merge --squash `cat .branch-name`
+          git config --global user.email "$AUTHOR_EMAIL"
+          git config --global user.name "$AUTHOR_NAME"
+          git commit -m "Patch for `cat .branch-name`"
+          git format-patch development..HEAD --stdout -k > patch.diff
+        env:
+          AUTHOR_EMAIL: ${{ github.event.head_commit.author.email }}
+          AUTHOR_NAME: ${{ github.event.head_commit.author.name }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: patch
+          path: patch.diff
