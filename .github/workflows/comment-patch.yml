@@ -1,0 +1,24 @@
+name: Comment Patch
+
+on:
+  workflow_run:
+    workflows:
+      - Create Patch
+    types:
+      - completed
+    branches-ignore:
+      - master
+      - development
+
+jobs:
+  create-patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install gems
+        run: sudo gem install faraday
+      - uses: actions/checkout@v2
+      - name: Comment Patch URL
+        run: ./.github/actions/comment_patch_url.rb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_RUN_JSON: ${{ toJSON(github.event.workflow_run) }}
