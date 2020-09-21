@@ -2834,24 +2834,21 @@ class IssueTest < ActiveSupport::TestCase
 
     with_settings :issue_done_ratio => 'issue_field' do
       issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
-      issue.status = closed_status
-      issue.save!
+      issue.update!(:status => closed_status)
 
       assert_equal 30, issue.read_attribute(:done_ratio)
     end
 
     with_settings :issue_done_ratio => 'issue_status' do
       issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
-      issue.status = closed_status
-      issue.save!
+      issue.update!(:status => closed_status)
 
       assert_equal 90, issue.read_attribute(:done_ratio)
     end
 
     with_settings :issue_done_ratio => 'issue_field_and_closed_status' do
       issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
-      issue.status = closed_status
-      issue.save!
+      issue.update!(:status => closed_status)
 
       assert_equal 100, issue.read_attribute(:done_ratio)
     end
