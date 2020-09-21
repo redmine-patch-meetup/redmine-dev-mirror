@@ -2882,6 +2882,7 @@ class IssueTest < ActiveSupport::TestCase
       issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
       issue.update!(:status => closed_status)
 
+      assert_equal 30, issue.done_ratio
       assert_equal 30, issue.read_attribute(:done_ratio)
     end
 
@@ -2889,6 +2890,7 @@ class IssueTest < ActiveSupport::TestCase
       issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
       issue.update!(:status => closed_status)
 
+      assert_equal 90, issue.done_ratio
       assert_equal 90, issue.read_attribute(:done_ratio)
     end
 
@@ -2896,6 +2898,7 @@ class IssueTest < ActiveSupport::TestCase
       issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
       issue.update!(:status => closed_status)
 
+      assert_equal 100, issue.done_ratio
       assert_equal 100, issue.read_attribute(:done_ratio)
     end
   end
