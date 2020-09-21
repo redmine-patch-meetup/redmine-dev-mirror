@@ -6,23 +6,27 @@
 <div class="<%= @issue.css_classes %> details">
   <% if @prev_issue_id || @next_issue_id %>
     <div class="next-prev-links contextual">
-      <%= link_to_if @prev_issue_id,
+      <span class="previous">
+        <%= link_to_if @prev_issue_id,
                      "\xc2\xab #{l(:label_previous)}",
                      (@prev_issue_id ? issue_path(@prev_issue_id) : nil),
                      :title => "##{@prev_issue_id}",
-                     :accesskey => accesskey(:previous) %> |
+                     :accesskey => accesskey(:previous) %>
+      </span>
       <% if @issue_position && @issue_count %>
         <span class="position">
           <%= link_to_if @query_path,
                          l(:label_item_position, :position => @issue_position, :count => @issue_count),
                          @query_path %>
-        </span> |
+        </span>
       <% end %>
-      <%= link_to_if @next_issue_id,
+      <span class="next">
+        <%= link_to_if @next_issue_id,
                      "#{l(:label_next)} \xc2\xbb",
                      (@next_issue_id ? issue_path(@next_issue_id) : nil),
                      :title => "##{@next_issue_id}",
                      :accesskey => accesskey(:next) %>
+      </span>
     </div>
   <% end %>
 
