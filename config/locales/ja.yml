@@ -394,6 +394,7 @@ ja:
   setting_issue_done_ratio: 進捗率の算出方法
   setting_issue_done_ratio_issue_field: チケットのフィールドを使用
   setting_issue_done_ratio_issue_status: チケットのステータスに連動
+  setting_issue_done_ratio_issue_field_and_closed_status: チケットのフィールドを使用（終了したチケットは100%）
   setting_start_of_week: 週の開始曜日
   setting_rest_api_enabled: RESTによるWebサービスを有効にする
   setting_default_notification_option: デフォルトのメール通知オプション
