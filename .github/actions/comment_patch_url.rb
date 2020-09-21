@@ -63,7 +63,7 @@ def find_previous_comment_id(pr_number)
 end
 
 def delete_comment(comment_id)
-  CONNECTION.delete "issues/comments/#{comment_id}", nil, "Authorization" => "token #{ENV['GITHUB_TOKEN']}"
+  CONNECTION.delete repo_resource("issues/comments/#{comment_id}"), nil, "Authorization" => "token #{ENV['GITHUB_TOKEN']}"
 end
 
 def main
