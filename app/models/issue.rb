@@ -735,6 +735,8 @@ class Issue < ActiveRecord::Base
   def done_ratio
     if Issue.use_status_for_done_ratio? && status && status.default_done_ratio
       status.default_done_ratio
+    elsif Issue.use_issue_field_and_closed_status_for_done_ratio? && status && status.is_closed?
+      100
     else
       read_attribute(:done_ratio)
     end
@@ -746,6 +748,10 @@ class Issue < ActiveRecord::Base
 
   def self.use_field_for_done_ratio?
     Setting.issue_done_ratio == 'issue_field'
+  end
+
+  def self.use_issue_field_and_closed_status_for_done_ratio?
+    Setting.issue_done_ratio == 'issue_field_and_closed_status'
   end
 
   def validate_issue
@@ -860,6 +866,8 @@ class Issue < ActiveRecord::Base
   def update_done_ratio_from_issue_status
     if Issue.use_status_for_done_ratio? && status && status.default_done_ratio
       self.done_ratio = status.default_done_ratio
+    elsif Issue.use_issue_field_and_closed_status_for_done_ratio? && status && status.is_closed?
+      self.done_ratio = 100
     end
   end
 
