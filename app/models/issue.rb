@@ -54,7 +54,7 @@ class Issue < ActiveRecord::Base
   acts_as_activity_provider :scope => proc { preload(:project, :author, :tracker, :status) },
                             :author_key => :author_id
 
-  DONE_RATIO_OPTIONS = %w(issue_field issue_status)
+  DONE_RATIO_OPTIONS = %w(issue_field issue_status issue_field_and_closed_status)
 
   attr_reader :transition_warning
   attr_writer :deleted_attachment_ids
