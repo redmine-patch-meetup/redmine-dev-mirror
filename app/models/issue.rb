@@ -721,6 +721,10 @@ class Issue < ActiveRecord::Base
     Setting.issue_done_ratio == 'issue_field_and_closed_status'
   end
 
+  def self.done_ratio_editable?
+    use_status_for_done_ratio? || use_issue_field_and_closed_status_for_done_ratio?
+  end
+
   def validate_issue
     if due_date && start_date && (start_date_changed? || due_date_changed?) && due_date < start_date
       errors.add :due_date, :greater_than_start_date
