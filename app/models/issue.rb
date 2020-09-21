@@ -56,7 +56,7 @@ class Issue < ActiveRecord::Base
 
   acts_as_mentionable :attributes => ['description']
 
-  DONE_RATIO_OPTIONS = %w(issue_field issue_status)
+  DONE_RATIO_OPTIONS = %w(issue_field issue_status issue_field_and_closed_status)
 
   attr_reader :transition_warning
   attr_writer :deleted_attachment_ids

@@ -476,6 +476,7 @@ en:
   setting_issue_done_ratio: Calculate the issue done ratio with
   setting_issue_done_ratio_issue_field: Use the issue field
   setting_issue_done_ratio_issue_status: Use the issue status
+  setting_issue_done_ratio_issue_field_and_closed_status: Use the issue field and closed status
   setting_start_of_week: Start calendars on
   setting_rest_api_enabled: Enable REST web service
   setting_cache_formatted_text: Cache formatted text
