@@ -4,7 +4,7 @@ on:
   push:
     branches-ignore:
       - master
-      - development
+      - develop
 
 jobs:
   create-patch:
@@ -16,14 +16,14 @@ jobs:
       - name: Create Patch
         run: |
           git rev-parse --abbrev-ref HEAD > .branch-name
-          git checkout development
+          git checkout develop
           git checkout -b patch
           git merge --squash `cat .branch-name`
           git config --global user.email "$AUTHOR_EMAIL"
           git config --global user.name "$AUTHOR_NAME"
           git commit -m "Patch for `cat .branch-name`"
           PATCH_FILE=`cat .branch-name | sed 's/\//_/g'`.patch                  # Replace forward slash in branch name with _
-          git format-patch development..HEAD --stdout -k > $PATCH_FILE
+          git format-patch develop..HEAD --stdout -k > $PATCH_FILE
           echo "::set-output name=PATCH_FILE::$PATCH_FILE"
         id: patch-creator
         env:
