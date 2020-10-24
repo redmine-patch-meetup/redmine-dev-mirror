@@ -64,4 +64,12 @@ class Redmine::ApiTest::ApiTest < Redmine::ApiTest::Base
     assert_response :not_acceptable
     assert_equal "We couldn't handle your request, sorry. If you were trying to access the API, make sure to append .json or .xml to your request URL.\n", response.body
   end
+
+  def test_setting_api_limit_should_limit_response_item_count
+    with_settings :api_limit => 5 do
+      get '/users.xml?limit=5', :headers => credentials('admin')
+      assert_select 'users[type=array][total_count][limit="5"][offset="0"]'
+      assert_select 'users user', 5
+    end
+  end
 end
