@@ -429,7 +429,7 @@ en:
   setting_host_name: Host name and path
   setting_text_formatting: Text formatting
   setting_wiki_compression: Wiki history compression
-  setting_api_limit: Maximum number of items returned in a JSON/XML API response
+  setting_api_limit: Maximum number of returned items
   setting_feeds_limit: Maximum number of items in Atom feeds
   setting_default_projects_public: New projects are public by default
   setting_autofetch_changesets: Fetch commits automatically
