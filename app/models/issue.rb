@@ -755,7 +755,7 @@ class Issue < ActiveRecord::Base
   end
 
   def self.done_ratio_editable?
-    use_status_for_done_ratio? || use_issue_field_and_closed_status_for_done_ratio?
+    use_field_for_done_ratio? || use_issue_field_and_closed_status_for_done_ratio?
   end
 
   def validate_issue
