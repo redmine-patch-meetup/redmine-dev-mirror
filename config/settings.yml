@@ -111,6 +111,9 @@ host_name:
 protocol:
   default: http
   security_notifications: 1
+api_limit:
+  format: int
+  default: 100
 feeds_limit:
   format: int
   default: 15
