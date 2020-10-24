@@ -686,7 +686,8 @@ class ApplicationController < ActionController::Base
     limit = options[:limit].to_i
     if limit < 1
       limit = 25
-    elsif limit > Setting.api_limit.to_i
+    end
+    if limit > Setting.api_limit.to_i
       limit = Setting.api_limit.to_i
     end
     if offset.nil? && options[:page].present?
