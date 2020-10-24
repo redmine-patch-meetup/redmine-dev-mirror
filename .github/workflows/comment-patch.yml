@@ -8,7 +8,7 @@ on:
       - completed
     branches-ignore:
       - master
-      - development
+      - develop
 
 jobs:
   create-patch:
