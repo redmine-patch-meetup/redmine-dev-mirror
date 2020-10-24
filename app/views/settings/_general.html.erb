@@ -25,6 +25,8 @@
 
 <p><%= setting_select :wiki_compression, [['Gzip', 'gzip']], :blank => :label_none %></p>
 
+<p><%= setting_text_field :api_limit, :size => 6 %></p>
+
 <p><%= setting_text_field :feeds_limit, :size => 6 %></p>
 
 <%= call_hook(:view_settings_general_form) %>
