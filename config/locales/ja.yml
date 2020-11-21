@@ -39,13 +39,13 @@ ja:
       half_a_minute: "30秒前後"
       less_than_x_seconds:
         one:   "1秒以内"
-        other: "%{count}秒以内"
+        other: "%{count}秒未満"
       x_seconds:
         one:   "1秒"
         other: "%{count}秒"
       less_than_x_minutes:
         one:   "1分以内"
-        other: "%{count}分以内"
+        other: "%{count}分未満"
       x_minutes:
         one:   "1分"
         other: "%{count}分"
@@ -71,8 +71,8 @@ ja:
         one:   "1年以上"
         other: "%{count}年以上"
       almost_x_years:
-        one:   "ほぼ1年"
-        other: "ほぼ%{count}年"
+        one:   "1年弱"
+        other: "%{count}年弱"
 
   number:
     format:
@@ -101,11 +101,9 @@ ja:
         delimiter: ""
         precision: 3
       storage_units:
-        format: "%n %u"
+        format: "%n%u"
         units:
-          byte:
-            one: "Byte"
-            other: "Bytes"
+          byte: バイト
           kb: "KB"
           mb: "MB"
           gb: "GB"
@@ -121,15 +119,15 @@ ja:
     errors:
       template:
         header:
-          one:   "%{model} にエラーが発生しました。"
-          other: "%{model} に %{count} つのエラーが発生しました。"
-        body: "次の項目を確認してください。"
+          one:   "%{model}にエラーが発生しました"
+          other: "%{model}に%{count}個のエラーが発生しました"
+        body: "次の項目を確認してください"
 
       messages:
         inclusion: "は一覧にありません"
         exclusion: "は予約されています"
         invalid: "は不正な値です"
-        confirmation: "が一致しません"
+        confirmation: "と%{attribute}の入力が一致しません"
         accepted: "を受諾してください"
         empty: "を入力してください"
         blank: "を入力してください"
