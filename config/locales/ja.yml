@@ -127,7 +127,7 @@ ja:
         inclusion: "は一覧にありません"
         exclusion: "は予約されています"
         invalid: "は不正な値です"
-        confirmation: "と%{attribute}の入力が一致しません"
+        confirmation: "が一致しません"
         accepted: "を受諾してください"
         empty: "を入力してください"
         blank: "を入力してください"
