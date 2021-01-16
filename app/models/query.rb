@@ -28,9 +28,6 @@ class QueryColumn
     self.name = name
     self.sortable = options[:sortable]
     self.groupable = options[:groupable] || false
-    if groupable == true
-      self.groupable = name.to_s
-    end
     self.totalable = options[:totalable] || false
     self.default_order = options[:default_order]
     @inline = options.key?(:inline) ? options[:inline] : true
@@ -82,13 +79,15 @@ class QueryColumn
   def css_classes
     name
   end
+
+  def group_by_statement
+    name.to_s
+  end
 end
 
 class TimestampQueryColumn < QueryColumn
-  def groupable
-    if @groupable
-      Redmine::Database.timestamp_to_date(sortable, User.current.time_zone)
-    end
+  def group_by_statement
+    Redmine::Database.timestamp_to_date(sortable, User.current.time_zone)
   end
 
   def group_value(object)
@@ -125,6 +124,10 @@ class QueryCustomFieldColumn < QueryColumn
     self.totalable = options.key?(:totalable) ? !!options[:totalable] : custom_field.totalable?
     @inline = custom_field.full_width_layout? ? false : true
     @cf = custom_field
+  end
+
+  def group_by_statement
+    @cf.group_statement
   end
 
   def caption
@@ -893,7 +896,7 @@ class Query < ActiveRecord::Base
   end
 
   def group_by_statement
-    group_by_column.try(:groupable)
+    group_by_column.try(:group_by_statement)
   end
 
   def project_statement
