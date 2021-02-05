@@ -47,7 +47,7 @@ def patch_artifact_download_url
 end
 
 def pull_request_number
-  WORKFLOW_RUN['pull_requests'][0]['number']
+  WORKFLOW_RUN.dig('pull_requests', 0, 'number')
 end
 
 def post_pr_comment(pr_number, comment)
@@ -70,7 +70,7 @@ def main
   existing_comment_id = find_previous_comment_id(pull_request_number)
   delete_comment(existing_comment_id) if existing_comment_id
 
-  post_pr_comment pull_request_number, "Patch can be downloaded [here](#{patch_artifact_download_url})"
+  post_pr_comment pull_request_number, "Patch can be downloaded [here](#{patch_artifact_download_url})" if pull_request_number
 end
 
 main if __FILE__ == $0
