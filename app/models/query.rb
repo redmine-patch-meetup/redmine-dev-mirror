@@ -20,8 +20,8 @@
 require 'redmine/sort_criteria'
 
 class QueryColumn
-  attr_accessor :name, :groupable, :totalable, :default_order
-  attr_writer   :sortable
+  attr_accessor :name, :totalable, :default_order
+  attr_writer   :sortable, :groupable
   include Redmine::I18n
 
   def initialize(name, options={})
@@ -44,6 +44,10 @@ class QueryColumn
     else
       @caption_key
     end
+  end
+
+  def groupable?
+    @groupable
   end
 
   # Returns true if the column is sortable, otherwise false
@@ -86,8 +90,8 @@ class QueryColumn
 end
 
 class TimestampQueryColumn < QueryColumn
-  def groupable
-    super && group_by_statement # Return false for DB that does not support timezone conversions
+  def groupable?
+    group_by_statement.present?
   end
 
   def group_by_statement
@@ -124,10 +128,13 @@ class QueryCustomFieldColumn < QueryColumn
   def initialize(custom_field, options={})
     self.name = "cf_#{custom_field.id}".to_sym
     self.sortable = custom_field.order_statement || false
-    self.groupable = custom_field.group_statement || false
     self.totalable = options.key?(:totalable) ? !!options[:totalable] : custom_field.totalable?
     @inline = custom_field.full_width_layout? ? false : true
     @cf = custom_field
+  end
+
+  def groupable?
+    group_by_statement.present?
   end
 
   def group_by_statement
@@ -748,7 +755,7 @@ class Query < ActiveRecord::Base
 
   # Returns an array of columns that can be used to group the results
   def groupable_columns
-    available_columns.select {|c| c.groupable}
+    available_columns.select {|c| c.groupable?}
   end
 
   # Returns a Hash of columns and the key for sorting
@@ -896,7 +903,7 @@ class Query < ActiveRecord::Base
   end
 
   def group_by_column
-    groupable_columns.detect {|c| c.groupable && c.name.to_s == group_by}
+    groupable_columns.detect {|c| c.groupable? && c.name.to_s == group_by}
   end
 
   def group_by_statement
