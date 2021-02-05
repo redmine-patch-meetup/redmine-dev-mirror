@@ -86,6 +86,10 @@ class QueryColumn
 end
 
 class TimestampQueryColumn < QueryColumn
+  def groupable
+    super && group_by_statement # Return false for DB that does not support timezone conversions
+  end
+
   def group_by_statement
     Redmine::Database.timestamp_to_date(sortable, User.current.time_zone)
   end
