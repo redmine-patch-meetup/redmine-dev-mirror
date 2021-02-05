@@ -15,12 +15,12 @@ jobs:
           fetch-depth: 0
       - name: Create Patch
         run: |
+          git config user.email "$AUTHOR_EMAIL"
+          git config user.name "$AUTHOR_NAME"
           git rev-parse --abbrev-ref HEAD > .branch-name
           git checkout develop
           git checkout -b patch
           git merge --squash `cat .branch-name`
-          git config --global user.email "$AUTHOR_EMAIL"
-          git config --global user.name "$AUTHOR_NAME"
           git commit -m "Patch for `cat .branch-name`"
           PATCH_FILE=`cat .branch-name | sed 's/\//_/g'`.patch                  # Replace forward slash in branch name with _
           git format-patch develop..HEAD --stdout -k > $PATCH_FILE
