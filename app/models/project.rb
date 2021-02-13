@@ -852,7 +852,7 @@ class Project < ActiveRecord::Base
   safe_attributes(
     'is_public',
     :if => lambda do |project, user|
-      project.is_public? || user.allowed_to?(:publish_project, project)
+      user.allowed_to?(:publish_project, project)
     end)
 
   safe_attributes(
