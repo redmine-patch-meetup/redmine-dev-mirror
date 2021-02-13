@@ -404,6 +404,7 @@ ja:
   permission_add_project: プロジェクトの追加
   permission_add_subprojects: サブプロジェクトの追加
   permission_edit_project: プロジェクトの編集
+  permission_publish_project: プロジェクトの公開
   permission_select_project_modules: モジュールの選択
   permission_manage_members: メンバーの管理
   permission_manage_versions: バージョンの管理

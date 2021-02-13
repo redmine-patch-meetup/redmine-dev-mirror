@@ -954,6 +954,7 @@ de:
   permission_manage_versions: Versionen verwalten
   permission_manage_wiki: Wiki verwalten
   permission_protect_wiki_pages: Wiki-Seiten schützen
+  permission_publish_project: Projekt als öffentlich markieren
   permission_rename_wiki_pages: Wiki-Seiten umbenennen
   permission_save_queries: Filter speichern
   permission_select_project_modules: Projektmodule auswählen
