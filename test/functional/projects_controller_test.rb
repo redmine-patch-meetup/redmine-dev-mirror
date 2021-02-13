@@ -1556,5 +1556,16 @@ class ProjectsControllerTest < Redmine::ControllerTest
     )
 
     assert_select '#project_is_public', :text => 'No'
+
+    # Test Yes
+    project.update(is_public: true)
+
+    @request.session[:user_id] = user.id
+    get(
+      :settings,
+      params: {id: project.id}
+    )
+
+    assert_select '#project_is_public', :text => 'Yes'
   end
 end
