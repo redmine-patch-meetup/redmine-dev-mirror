@@ -9,6 +9,7 @@ roles_001:
     ---
     - :add_project
     - :edit_project
+    - :publish_project
     - :close_project
     - :delete_project
     - :select_project_modules
@@ -84,6 +85,7 @@ roles_002:
   permissions: |
     ---
     - :edit_project
+    - :publish_project
     - :delete_project
     - :manage_members
     - :manage_versions
@@ -137,6 +139,7 @@ roles_003:
   permissions: |
     ---
     - :edit_project
+    - :publish_project
     - :manage_members
     - :manage_versions
     - :manage_categories
