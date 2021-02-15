@@ -21,15 +21,18 @@ class WikiRedirectsController < ApplicationController
   before_action :find_wiki_redirect, :authorize
 
   def destroy
-    @wiki_redirect.destroy
+    if @wiki_redirect.destroy
+      flash[:notice] = l(:notice_successful_delete)
+      redirect_to project_wiki_page_path(@page.project, @page.title)
+    end
   end
 
   private
 
   def find_wiki_redirect
     @project = Project.find(params[:project_id])
-    page = Wiki.find_page(params[:wiki_page_id], project: @project)
-    @wiki_redirect= WikiRedirect.where(redirects_to: page.title).find(params[:id])
+    @page = Wiki.find_page(params[:wiki_page_id], project: @project)
+    @wiki_redirect=WikiRedirect.where(redirects_to: @page.title).find(params[:id])
     render_404 unless @wiki_redirect
   rescue ActiveRecord::RecordNotFound
     render_404
