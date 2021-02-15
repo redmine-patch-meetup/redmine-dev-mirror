@@ -118,6 +118,7 @@ class WikiController < ApplicationController
       @content.current_version? &&
       Redmine::WikiFormatting.supports_section_edit?
 
+    @redirects_to_self = WikiRedirect.where(:redirects_to => @page.title, :redirects_to_wiki_id => @page.wiki_id)
     respond_to do |format|
       format.html
       format.api
