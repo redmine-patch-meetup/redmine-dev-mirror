@@ -191,6 +191,7 @@ Rails.application.routes.draw do
 
     match 'wiki/index', :controller => 'wiki', :action => 'index', :via => :get
     resources :wiki, :except => [:index, :create], :as => 'wiki_page' do
+      resources :redirects, controller: 'wiki_redirects', only: :destroy
       member do
         get 'rename'
         post 'rename'
