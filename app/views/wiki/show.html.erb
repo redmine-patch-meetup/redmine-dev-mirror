@@ -17,7 +17,7 @@
       <%= link_to_if_authorized(l(:button_rename), {:action => 'rename', :id => @page.title}, :class => 'icon icon-move') %>
       <% if User.current.allowed_to?(:rename_wiki_pages, @project) %>
         <% @redirects_to_self.map { |redirect| %>
-          <%= link_to("Delete redirect from #{WikiPage.pretty_title(redirect.title)}", {:controller => 'wiki_redirects', :action => 'destroy', :project_id => @project.identifier, :wiki_page_id => @page.title, :id => redirect.id}, :method => :delete, :class => 'icon icon-link-break') %>
+          <%= link_to(l(:button_delete_redirect, :page_title => WikiPage.pretty_title(redirect.title)), {:controller => 'wiki_redirects', :action => 'destroy', :project_id => @project.identifier, :wiki_page_id => @page.title, :id => redirect.id}, :method => :delete, :class => 'icon icon-link-break') %>
         <% } %>
       <% end %>
       <%= link_to_if_authorized(l(:button_delete), {:action => 'destroy', :id => @page.title}, :method => :delete, :data => {:confirm => l(:text_are_you_sure)}, :class => 'icon icon-del') %>
