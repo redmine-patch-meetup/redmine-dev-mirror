@@ -40,7 +40,8 @@ class WikiRedirectsControllerTest < Redmine::ControllerTest
 
     delete :destroy, params: {id: wiki_redirect.id, project_id: wiki_page.wiki.project_id, wiki_page_id: 'Test'}
 
-    assert_response :success
+    assert_redirected_to '/projects/ecookbook/wiki/Test'
+    assert_equal 'Successful deletion.', flash[:notice]
     assert_not WikiRedirect.exists?(id: wiki_redirect.id)
   end
 
