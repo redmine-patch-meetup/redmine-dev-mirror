@@ -258,6 +258,24 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  def test_hide_delete_redirect_links_without_permission
+    @request.session[:user_id] = 2
+
+    wiki_page = WikiPage.find_by(title: 'CookBook_documentation')
+    wiki_page.title = 'Old_Cookbook'
+    wiki_page.save
+
+    project = wiki_page.wiki.project
+    role = User.find(2).members.find_by(project: project).roles.first
+    role.remove_permission! :rename_wiki_pages
+
+    get :show, :params => {:project_id => 'ecookbook', :id => 'Old_Cookbook'}
+
+    assert_select '.drdn-items' do
+      assert_select 'a.icon-link-break', count: 0
+    end
+  end
+
   def test_get_new
     @request.session[:user_id] = 2
 
