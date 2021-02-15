@@ -233,6 +233,28 @@ class WikiControllerTest < Redmine::ControllerTest
     end
   end
 
+  def test_show_delete_redirect_links
+    @request.session[:user_id] = 2
+
+    wiki_page = WikiPage.find_by(title: 'CookBook_documentation')
+    second_title = 'Old_Cookbook'
+    wiki_page.title = second_title
+    wiki_page.save
+
+    new_title = 'New_Cookbook'
+    wiki_page.title = new_title
+    wiki_page.save
+
+    get :show, :params => {:project_id => 'ecookbook', :id => new_title}
+
+    assert_select '.drdn-items' do
+      assert_select 'a.icon-link-break',
+                    text: 'Delete redirect from CookBook documentation'
+      assert_select 'a.icon-link-break',
+                    text: 'Delete redirect from Old Cookbook'
+    end
+  end
+
   def test_get_new
     @request.session[:user_id] = 2
 
