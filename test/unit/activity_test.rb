@@ -134,21 +134,39 @@ class ActivityTest < ActiveSupport::TestCase
 
   def test_activity_contains_issue_status_update_events
     issue = Issue.generate!(:status_id => 1)
-    issue.init_journal(User.first, "Change Status")
+    
+    events = find_events(User.anonymous, :project => @project)
+    target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
+    target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
+    event_titles = target_issue_events.map{ |e| e.event_title }
+    assert_equal("Bug ##{issue.id} (New): Generated", event_titles[0], "event title should includes (New)")
+    
+    issue = Issue.find(issue.id)
+    issue.init_journal(User.first, "Assign")
     issue.status_id = 2
+    assert issue.save
+    
+    events = find_events(User.anonymous, :project => @project)
+    target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
+    target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
+    event_titles = target_issue_events.map{ |e| e.event_title }
+    assert_equal("Bug ##{issue.id} (New): Generated", event_titles[0], "event title should includes (New)")
+    assert_equal("Bug ##{issue.id} (Assigned): Generated", event_titles[1], "event title should includes (Assinged)")
+
+    issue = Issue.find(issue.id)
+    issue.init_journal(User.first, "Resolve")
+    issue.status_id = 3
     assert issue.save
 
     events = find_events(User.anonymous, :project => @project)
     target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
     target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
-
     event_titles = target_issue_events.map{ |e| e.event_title }
     assert_equal("Bug ##{issue.id} (New): Generated", event_titles[0], "event title should includes (New)")
     assert_equal("Bug ##{issue.id} (Assigned): Generated", event_titles[1], "event title should includes (Assinged)")
+    assert_equal("Bug ##{issue.id} (Resolved): Generated", event_titles[2], "event title should includes (Resolved)")
+    
   end
-
-  # TODO: test when no journal
-  # TODO: test when three or more journal
 
   class TestActivityProviderWithPermission
     def self.activity_provider_options
