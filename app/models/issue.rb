@@ -47,7 +47,7 @@ class Issue < ActiveRecord::Base
                      :preload => [:project, :status, :tracker],
                      :scope => lambda {|options| options[:open_issues] ? self.open : self.all}
 
-  acts_as_event :title => Proc.new {|o| "#{o.tracker.name} ##{o.id} (#{o.status}): #{o.subject}"},
+  acts_as_event :title => Proc.new {|o| "#{o.tracker.name} ##{o.id} (#{o.event_status}): #{o.subject}"},
                 :url => Proc.new {|o| {:controller => 'issues', :action => 'show', :id => o.id}},
                 :type => Proc.new {|o| 'issue' + (o.closed? ? '-closed' : '')}
 
@@ -1463,6 +1463,17 @@ class Issue < ActiveRecord::Base
       s << ' assigned-to-my-group' if user.groups.any? {|g| g.id == assigned_to_id}
     end
     s
+  end
+
+  # Retrieves issue's original status from journal if modified since issue creation
+  # TODO: 書けそうだったらissue_test.rbにテスト追加
+  def event_status
+    changed_statuses = JournalDetail.joins("LEFT OUTER JOIN #{Journal.table_name} ON #{JournalDetail.table_name}.journal_id = #{Journal.table_name}.id").
+      where("#{Journal.table_name}.journalized_id = ? AND #{Journal.table_name}.journalized_type = 'Issue' AND #{JournalDetail.table_name}.prop_key = 'status_id'", self.id).
+      order("#{Journal.table_name}.created_on")
+
+    initial_status_id = changed_statuses.first.try(:old_value)
+    initial_status_id ? IssueStatus.find_by_id(initial_status_id.to_i) : self.status
   end
 
   # Unassigns issues from +version+ if it's no longer shared with issue's project
