@@ -75,7 +75,8 @@ class Mailer < ActionMailer::Base
                     'Issue-Tracker' => issue.tracker.name,
                     'Issue-Id' => issue.id,
                     'Issue-Author' => issue.author.login
-    redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to
+    redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to.is_a?(User)
+    redmine_headers 'Issue-Assignee' => "Group (#{issue.assigned_to.name})" if issue.assigned_to.is_a?(Group)
     message_id issue
     references issue
     @author = issue.author
@@ -107,7 +108,8 @@ class Mailer < ActionMailer::Base
                     'Issue-Tracker' => issue.tracker.name,
                     'Issue-Id' => issue.id,
                     'Issue-Author' => issue.author.login
-    redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to
+    redmine_headers 'Issue-Assignee' => issue.assigned_to.login if issue.assigned_to.is_a?(User)
+    redmine_headers 'Issue-Assignee' => "Group (#{issue.assigned_to.name})" if issue.assigned_to.is_a?(Group)
     message_id journal
     references issue
     @author = journal.user

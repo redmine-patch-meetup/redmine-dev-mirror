@@ -219,6 +219,33 @@ class MailerTest < ActiveSupport::TestCase
     assert_equal issue.author.login, mail.header['X-Redmine-Sender'].to_s
   end
 
+  def test_email_headers_shouldnt_include_assignee_when_not_assigned
+    issue = Issue.find(6)
+    issue.init_journal(User.current)
+    issue.update(:status_id => 4)
+    issue.update(:assigned_to_id => nil)
+    mail = last_email
+    assert !mail.header['X-Redmine-Issue-Assignee']
+  end
+  
+  def test_email_headers_should_include_assignee_when_assigned
+    issue = Issue.find(6)
+    issue.init_journal(User.current)
+    issue.update(:assigned_to_id => 2)
+    mail = last_email
+    assert_equal issue.assigned_to.login, mail.header['X-Redmine-Issue-Assignee'].to_s
+  end
+
+  def test_email_headers_should_include_assignee_if_assigned_to_group
+    issue = Issue.find(6)
+    with_settings :issue_group_assignment => 1 do
+      issue.init_journal(User.current)
+      issue.update(:assigned_to_id => 10)  # Group: A Team
+    end
+    mail = last_email
+    assert_equal "Group (#{issue.assigned_to.name})", mail.header['X-Redmine-Issue-Assignee'].to_s
+  end
+
   def test_plain_text_mail
     Setting.plain_text_mail = 1
     journal = Journal.find(2)
