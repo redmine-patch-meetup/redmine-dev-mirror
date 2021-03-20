@@ -617,8 +617,8 @@ module Redmine
       end
 
       def bulk_edit_tag(view, tag_id, tag_name, custom_field, objects, value, options={})
-        time_local = !custom_value.value ? nil :
-          custom_value.value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16)
+        time_local = !value || value.empty? ? nil :
+          value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
         view.datetime_local_field_tag(tag_name, time_local, options.merge(:id => tag_id, :size => 12)) +
           view.datetimepicker_for(tag_id) +
           bulk_clear_tag(view, tag_id, tag_name, custom_field, value)
