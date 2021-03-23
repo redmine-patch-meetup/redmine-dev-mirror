@@ -22,6 +22,7 @@ require File.expand_path('../../test_helper', __FILE__)
 class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
   fixtures :projects,
            :users, :email_addresses,
+           :user_preferences,
            :roles,
            :members,
            :member_roles,
