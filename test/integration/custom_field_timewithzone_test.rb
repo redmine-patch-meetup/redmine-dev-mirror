@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Redmine - project management software
-# Copyright (C) 2006-2020  Jean-Philippe Lang
+# Copyright (C) 2006-2021  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,17 +22,19 @@ require File.expand_path('../../test_helper', __FILE__)
 class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
   fixtures :projects,
            :users, :email_addresses,
-           :user_preferences,
            :roles,
            :members,
            :member_roles,
            :trackers,
            :projects_trackers,
+           :enabled_modules,
+           :issue_statuses,
            :issues,
            :enumerations,
            :custom_fields,
            :custom_values,
-           :custom_fields_trackers
+           :custom_fields_trackers,
+           :attachments
 
   def setup
     @field = IssueCustomField.find(12)
@@ -73,6 +75,16 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     assert_select 'input[name=?][value=?]', "issue[custom_field_values][#{@field.id}]", '2011-03-11T14:46'
   end
 
+  def test_bulk_edit
+    get(
+      "/issues/bulk_edit",
+      :params => {
+        :ids => [1, @issue.id],
+      }
+    )
+    assert_response :success
+  end
+
   def test_put_issue_with_timewithzone_custom_field
     # update issues/14 in lang="ja", tz='Tokyo' (+0900)
     @user.preference.time_zone = 'Tokyo'
@@ -85,6 +97,8 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
         :custom_field_values => {@field.id.to_s => "1985-08-12T18:56"}  # in tz=Asia/Tokyo +0900
       }
     }
+
+    assert_response :found
     assert_equal "1985-08-12T09:56:00Z", CustomValue.find_by(:customized_id=>@issue.id, :custom_field_id => @field.id).value
 
     # update issues/14 in tz=nil
