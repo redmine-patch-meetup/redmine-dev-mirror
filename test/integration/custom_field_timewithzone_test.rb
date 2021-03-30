@@ -164,4 +164,42 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     end
   end
 
+  test 'the value of custom_field_default_value should be presented in timezone of the user' do
+    user = User.find_by_login('admin')
+    post("/login",:params => {:username => user.login,:password => user.login})
+    
+    assert_nil @field.default_value
+    get "/custom_fields/#{@field.id}/edit"
+    assert_response :success
+    assert_select '#custom_field_default_value', :value => ''
+    
+    @field.default_value = '1986-01-28T16:39:00Z'
+    @field.save
+    get "/custom_fields/#{@field.id}/edit"
+    assert_response :success
+    assert_select '#custom_field_default_value[value=?]', '1986-01-28T16:39'
+    assert_select 'p:has(#custom_field_default_value)', /(UTC)/
+    
+    user.preference.time_zone = "Eastern Time (US & Canada)"
+    user.preference.save
+    get "/custom_fields/#{@field.id}/edit"
+    assert_response :success
+    assert_select '#custom_field_default_value[value=?]', '1986-01-28T11:39'
+    assert_select 'p:has(#custom_field_default_value)', /(EST)/
+    
+    user.preference.time_zone = "Central Time (US & Canada)"
+    user.preference.save
+    put "/custom_fields/#{@field.id}",
+    :params => {
+      :custom_field => {:default_value => "2003-02-01T08:59"}  # in tz=CST -0600
+    }
+    assert_response :found
+    assert_equal "2003-02-01T14:59:00Z", CustomField.find(@field.id).default_value
+
+    user.preference.time_zone = nil
+    user.preference.save
+    @field.default_value = nil
+    @field.save
+  end
+
 end
