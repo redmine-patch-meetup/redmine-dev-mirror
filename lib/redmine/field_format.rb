@@ -619,7 +619,7 @@ module Redmine
       end
       
       def self.timezone(value)
-        (value.to_time rescue Time.now()).in_time_zone(User.current.time_zone).zone
+        (value&.to_time || Time.now()).in_time_zone(User.current.time_zone).zone
       end
 
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
