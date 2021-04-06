@@ -614,8 +614,12 @@ module Redmine
       end
       
       def self.time_local(value)
-        !value || value.empty? ? nil :
-          value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
+        # value is a iso8601 formatted string trailing Z
+        # .to_time transforms value to Time in utc with tz=utc
+        # .in_time_zone transforms Time to TimeWithZone in user's tz or Time if tz=nil
+        # .iso8601 transforms to string like yyyy-MM-ddThh:mm:ss+tz
+        # .slice trims the timezone, as datetime_local
+        value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
       end
       
       def self.timezone(value)
@@ -623,11 +627,6 @@ module Redmine
       end
 
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
-        # value is a iso8601 formatted string trailing Z
-        # .to_time transforms value to Time in utc with tz=utc
-        # .in_time_zone transforms Time to TimeWithZone in user's tz or Time if tz=nil
-        # .iso8601 transforms to string like yyyy-MM-ddThh:mm:ss+tz
-        # .slice trims the timezone, as datetime_local
         view.datetime_local_field_tag(tag_name, TimewithzoneFormat.time_local(custom_value.value), options.merge(:id => tag_id, :size => 12)) +
         view.datetimepicker_for(tag_id)  + " (#{TimewithzoneFormat.timezone(custom_value.value)})"
       end
