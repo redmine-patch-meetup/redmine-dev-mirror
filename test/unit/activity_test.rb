@@ -134,18 +134,18 @@ class ActivityTest < ActiveSupport::TestCase
 
   def test_activity_contains_issue_status_update_events
     issue = Issue.generate!(:status_id => 1)
-    
+
     events = find_events(User.anonymous, :project => @project)
     target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
     target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
     event_titles = target_issue_events.map{ |e| e.event_title }
     assert_equal("Bug ##{issue.id} (New): Generated", event_titles[0], "event title should includes (New)")
-    
+
     issue = Issue.find(issue.id)
-    issue.init_journal(User.first, "Assign")
+    issue.init_journal(User.first)
     issue.status_id = 2
     assert issue.save
-    
+
     events = find_events(User.anonymous, :project => @project)
     target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
     target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
@@ -154,7 +154,7 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal("Bug ##{issue.id} (Assigned): Generated", event_titles[1], "event title should includes (Assinged)")
 
     issue = Issue.find(issue.id)
-    issue.init_journal(User.first, "Resolve")
+    issue.init_journal(User.first)
     issue.status_id = 3
     assert issue.save
 
@@ -165,8 +165,67 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal("Bug ##{issue.id} (New): Generated", event_titles[0], "event title should includes (New)")
     assert_equal("Bug ##{issue.id} (Assigned): Generated", event_titles[1], "event title should includes (Assinged)")
     assert_equal("Bug ##{issue.id} (Resolved): Generated", event_titles[2], "event title should includes (Resolved)")
-    
   end
+
+  def test_activity_contains_issue_status_update_events2
+    # ステータス以外(サブジェクト）を変更後、ステータスを変更する
+    # ステータス以外(サブジェクト）とステータスを一度に変更する
+
+    issue = Issue.generate!(:status_id => 1, :subject => "Generated")
+
+    issue = Issue.find(issue.id)
+    issue.init_journal(User.first)
+    issue.subject = "Activity test"
+    assert issue.save
+
+    issue = Issue.find(issue.id)
+    issue.init_journal(User.first)
+    issue.status_id = 3
+    assert issue.save
+
+    events = find_events(User.anonymous, :project => @project)
+    target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
+    target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
+    event_titles = target_issue_events.map{ |e| e.event_title }
+    assert_equal("Bug ##{issue.id} (New): Activity test", event_titles[0], "event title should includes (New)")
+    assert_equal("Bug ##{issue.id} (Resolved): Activity test", event_titles[1], "event title should includes (Resolved)")
+
+    issue = Issue.find(issue.id)
+    issue.init_journal(User.first, "Close")
+    issue.subject = "Closing test"
+    issue.status_id = 5
+    assert issue.save
+
+    events = find_events(User.anonymous, :project => @project)
+    target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
+    target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
+    event_titles = target_issue_events.map{ |e| e.event_title }
+    assert_equal("Bug ##{issue.id} (New): Closing test", event_titles[0], "event title should includes (New)")
+    assert_equal("Bug ##{issue.id} (Resolved): Closing test", event_titles[1], "event title should includes (Resolved)")
+    assert_equal("Bug ##{issue.id} (Closed): Closing test", event_titles[2], "event title should includes (Closed)")
+  end
+
+  def test_activity_contains_issue_status_update_events3
+    # コメントを追記後、ステータスを変更する
+    issue = Issue.generate!(:status_id => 1, :subject => "Generated")
+
+    issue = Issue.find(issue.id)
+    issue.init_journal(User.first, "note")
+    assert issue.save
+
+    issue = Issue.find(issue.id)
+    issue.init_journal(User.first)
+    issue.status_id = 3
+    assert issue.save
+
+    events = find_events(User.anonymous, :project => @project)
+    target_issue_events = events.find_all { |event| event == issue || (event.is_a?(Journal) && event.issue == issue ) }
+    target_issue_events.sort! { |x, y| x.event_datetime <=> y.event_datetime }
+    event_titles = target_issue_events.map{ |e| e.event_title }
+    assert_equal("Bug ##{issue.id} (New): Generated", event_titles[0], "event title should includes (New)")
+    assert_equal("Bug ##{issue.id}: Generated", event_titles[1], "event title should not include status")
+    assert_equal("Bug ##{issue.id} (Resolved): Generated", event_titles[2], "event title should includes (Resolved)")
+ end
 
   class TestActivityProviderWithPermission
     def self.activity_provider_options
