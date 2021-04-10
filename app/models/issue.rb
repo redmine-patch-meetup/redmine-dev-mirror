@@ -1466,7 +1466,6 @@ class Issue < ActiveRecord::Base
   end
 
   # Retrieves issue's original status from journal if modified since issue creation
-  # TODO: 書けそうだったらissue_test.rbにテスト追加
   def event_status
     changed_statuses = JournalDetail.joins("LEFT OUTER JOIN #{Journal.table_name} ON #{JournalDetail.table_name}.journal_id = #{Journal.table_name}.id").
       where("#{Journal.table_name}.journalized_id = ? AND #{Journal.table_name}.journalized_type = 'Issue' AND #{JournalDetail.table_name}.prop_key = 'status_id'", self.id).
