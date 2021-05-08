@@ -696,6 +696,33 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select '#main.nosidebar'
   end
 
+  def test_show_should_display_is_public_project_notice
+    p = Project.find('ecookbook')
+    assert p.is_public?
+
+    with_settings :login_required => '0' do
+      get(:show, :params => {:id => p.identifier})
+      assert_response :success
+      assert_select '#is-public-project-notice .info', :text => l(:text_project_is_public_anonymous)
+    end
+
+    with_settings :login_required => '1' do
+      @request.session[:user_id] = 1
+      get(:show, :params => {:id => p.identifier})
+      assert_response :success
+      assert_select '#is-public-project-notice .info', :text => l(:text_project_is_public_non_member)
+    end
+  end
+
+  def test_show_should_display_is_private_project_notice
+    @request.session[:user_id] = 1
+    p = Project.find('private-child')
+    assert_not p.is_public?
+    get(:show, :params => {:id => p.identifier})
+    assert_response :success
+    assert_select '#is-public-project-notice', :count => 0
+  end
+
   def test_show_should_display_visible_custom_fields
     ProjectCustomField.find_by_name('Development status').update_attribute :visible, true
     get(:show, :params => {:id => 'ecookbook'})
