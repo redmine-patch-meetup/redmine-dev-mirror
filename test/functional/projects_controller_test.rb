@@ -723,6 +723,25 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_select '#is-public-project-notice', :count => 0
   end
 
+  def test_show_should_display_project_public_badge_if_project_is_public
+    p = Project.find('ecookbook')
+    assert p.is_public?
+
+    get(:show, params: {id: p.identifier})
+    assert_response :success
+    assert_select '.badge.badge-project-public', text: l(:label_public_projects)
+  end
+
+  def test_show_should_not_display_project_public_badge_if_project_is_private
+    @request.session[:user_id] = 1
+    p = Project.find('private-child')
+    assert_not p.is_public?
+
+    get(:show, params: {id: p.identifier})
+    assert_response :success
+    assert_select '.badge.badge-project-public', count: 0
+  end
+
   def test_show_should_display_visible_custom_fields
     ProjectCustomField.find_by_name('Development status').update_attribute :visible, true
     get(:show, :params => {:id => 'ecookbook'})

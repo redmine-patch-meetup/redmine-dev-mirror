@@ -21,7 +21,7 @@
   <% end %>
 </div>
 
-<h2><%=l(:label_overview)%></h2>
+<h2><%=l(:label_overview)%> <% if @project.is_public %><span class="badge badge-project-public"><%= l(:label_public_projects) %></span><% end %></h2>
 
 <% unless @project.active? %>
   <p class="warning"><span class="icon icon-lock"><%= l(:text_project_closed) %></span></p>
