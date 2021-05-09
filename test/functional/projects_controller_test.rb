@@ -729,7 +729,7 @@ class ProjectsControllerTest < Redmine::ControllerTest
 
     get(:show, params: {id: p.identifier})
     assert_response :success
-    assert_select '.badge.badge-project-public', text: l(:label_public_projects)
+    assert_select '.badge.badge-project-public', text: l(:field_is_public)
   end
 
   def test_show_should_not_display_project_public_badge_if_project_is_private
