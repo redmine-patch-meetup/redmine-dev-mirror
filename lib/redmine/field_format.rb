@@ -619,7 +619,7 @@ module Redmine
         # .in_time_zone transforms Time to TimeWithZone in user's tz or Time if tz=nil
         # .iso8601 transforms to string like yyyy-MM-ddThh:mm:ss+tz
         # .slice trims the timezone, as datetime_local
-        value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
+        value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue ""
       end
       
       def self.timezone(value)
