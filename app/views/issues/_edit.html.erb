@@ -3,7 +3,7 @@
     <%= render :partial => 'conflict' if @conflict %>
     <div class="box">
     <% if @issue.attributes_editable? %>
-        <fieldset class="tabular"><legend><%= l(:label_change_properties) %></legend>
+        <fieldset id="attributes" class="tabular"><legend><%= l(:label_change_properties) %></legend>
         <div id="all_attributes">
         <%= render :partial => 'form', :locals => {:f => f} %>
         </div>

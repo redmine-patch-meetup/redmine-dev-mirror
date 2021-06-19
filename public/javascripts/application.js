@@ -27,6 +27,20 @@ function showAndScrollTo(id, focus) {
   $('html, body').animate({scrollTop: $('#'+id).offset().top}, 100);
 }
 
+function showAndScrollToEditIssue() {
+  $('#update h3').show();
+  $('#attributes').show();
+  $('#log_time').show();
+  showAndScrollTo('update', 'issue_notes');
+}
+
+function showAndScrollToAddNotes() {
+  $('#update h3').hide();
+  $('#attributes').hide();
+  $('#log_time').hide();
+  showAndScrollTo('update', 'issue_notes');
+}
+
 function toggleRowGroup(el) {
   var tr = $(el).parents('tr').first();
   var n = tr.next();

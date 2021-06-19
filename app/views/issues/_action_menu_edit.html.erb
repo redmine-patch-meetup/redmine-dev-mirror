@@ -3,7 +3,7 @@
 
 <div style="clear: both;"></div>
 <% if @issue.editable? %>
-  <div id="update" style="display:none;">
+  <div id="update" class="hidden">
     <h3><%= l(:button_edit) %></h3>
     <%= render :partial => 'edit' %>
   </div>

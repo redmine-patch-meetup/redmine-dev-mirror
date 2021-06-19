@@ -141,7 +141,7 @@ div.modal p.buttons {margin-bottom:0;}
 div.modal .box p {margin: 0.3em 0;}
 
 .clear:after{ content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-
+.hidden {display: none;}
 .mobile-show {display: none;}
 .hidden {display: none;}
 .inline-flex {display: inline-flex;}

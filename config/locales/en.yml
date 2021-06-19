@@ -1152,6 +1152,7 @@ en:
   button_edit: Edit
   button_edit_associated_wikipage: "Edit associated Wiki page: %{page_title}"
   button_add: Add
+  button_add_notes: Add notes
   button_change: Change
   button_apply: Apply
   button_clear: Clear
