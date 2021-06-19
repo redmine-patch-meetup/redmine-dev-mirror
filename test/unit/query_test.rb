@@ -2440,7 +2440,7 @@ class QueryTest < ActiveSupport::TestCase
     @manager_role = Role.find_by_name('Manager')
     @developer_role = Role.find_by_name('Developer')
 
-    @project = Project.generate!
+    @project = Project.generate!(is_public: true)
     @manager = User.generate!
     @developer = User.generate!
     @boss = User.generate!
