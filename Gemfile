@@ -11,7 +11,7 @@ gem "actionpack-xml_parser"
 gem 'roadie-rails', '~> 2.2.0'
 gem 'marcel'
 gem "mail", "~> 2.7.1"
-gem 'csv', '~> 3.1.1'
+gem 'csv', '~> 3.2.0'
 gem 'nokogiri', '~> 1.11.1'
 gem 'i18n', '~> 1.8.2'
 gem "rbpdf", "~> 1.20.0"
@@ -96,7 +96,7 @@ group :test do
   gem "selenium-webdriver"
   gem 'webdrivers', '~> 4.4', require: false
   # RuboCop
-  gem 'rubocop', '~> 1.14.0'
+  gem 'rubocop', '~> 1.16.0'
   gem 'rubocop-performance', '~> 1.11.0'
   gem 'rubocop-rails', '~> 2.10.1'
 end

@@ -169,6 +169,9 @@ Redmine::AccessControl.map do |map|
     map.permission :rename_wiki_pages, {:wiki => :rename}, :require => :member
     map.permission :delete_wiki_pages, {:wiki => [:destroy, :destroy_version]}, :require => :member
     map.permission :delete_wiki_pages_attachments, {}
+    map.permission :view_wiki_page_watchers, {}, :read => true
+    map.permission :add_wiki_page_watchers, {:watchers => [:new, :create, :autocomplete_for_user]}
+    map.permission :delete_wiki_page_watchers, {:watchers => :destroy}
     map.permission :protect_wiki_pages, {:wiki => :protect}, :require => :member
     map.permission :manage_wiki, {:wikis => [:edit, :destroy], :wiki => :rename}, :require => :member
   end
@@ -420,7 +423,7 @@ Redmine::Activity.map do |activity|
   activity.register :news
   activity.register :documents, :class_name => %w(Document Attachment)
   activity.register :files, :class_name => 'Attachment'
-  activity.register :wiki_edits, :class_name => 'WikiContent::Version', :default => false
+  activity.register :wiki_edits, :class_name => 'WikiContentVersion', :default => false
   activity.register :messages, :default => false
   activity.register :time_entries, :default => false
 end

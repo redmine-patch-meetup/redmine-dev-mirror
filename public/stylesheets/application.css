@@ -789,7 +789,7 @@ span.pagination {margin-left:3px; color:#888; display:block;}
   font-weight: bold;
 }
 span.pagination>span {white-space:nowrap;}
-.controller-attachments.action-show span.pagination{
+.controller-attachments.action-show span.pagination, .controller-repositories.action-entry span.pagination {
   display: block;
   margin-top: 1.2em;
 }
@@ -1462,6 +1462,10 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
   color: #fff;
   border: 1px solid #d22;
 }
+.badge-project-public {
+  color: #205D86;
+  border: 1px solid #205D86;
+}
 .badge-count {
   color: #fff;
   background:#9DB9D5;
@@ -1804,7 +1808,7 @@ img {
   max-width: 100%;
 }
 
-.filecontent-container > .filecontent.wiki {
+.filecontent.wiki {
   position: relative;
   padding: 1em;
   border: 1px solid #e4e4e4;
