@@ -54,7 +54,7 @@ class Issue < ActiveRecord::Base
   acts_as_activity_provider :scope => proc {preload(:project, :author, :tracker, :status)},
                             :author_key => :author_id
 
-  DONE_RATIO_OPTIONS = %w(issue_field issue_status)
+  DONE_RATIO_OPTIONS = %w(issue_field issue_status issue_field_and_closed_status)
 
   attr_reader :transition_warning
   attr_writer :deleted_attachment_ids
@@ -723,6 +723,8 @@ class Issue < ActiveRecord::Base
   def done_ratio
     if Issue.use_status_for_done_ratio? && status && status.default_done_ratio
       status.default_done_ratio
+    elsif Issue.use_issue_field_and_closed_status_for_done_ratio? && status && status.is_closed?
+      100
     else
       read_attribute(:done_ratio)
     end
@@ -734,6 +736,14 @@ class Issue < ActiveRecord::Base
 
   def self.use_field_for_done_ratio?
     Setting.issue_done_ratio == 'issue_field'
+  end
+
+  def self.use_issue_field_and_closed_status_for_done_ratio?
+    Setting.issue_done_ratio == 'issue_field_and_closed_status'
+  end
+
+  def self.done_ratio_editable?
+    use_field_for_done_ratio? || use_issue_field_and_closed_status_for_done_ratio?
   end
 
   def validate_issue
@@ -842,6 +852,8 @@ class Issue < ActiveRecord::Base
   def update_done_ratio_from_issue_status
     if Issue.use_status_for_done_ratio? && status && status.default_done_ratio
       self.done_ratio = status.default_done_ratio
+    elsif Issue.use_issue_field_and_closed_status_for_done_ratio? && status && status.is_closed?
+      self.done_ratio = 100
     end
   end
 
