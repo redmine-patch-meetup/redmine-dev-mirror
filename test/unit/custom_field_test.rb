@@ -195,6 +195,20 @@ class CustomFieldTest < ActiveSupport::TestCase
     assert !f.valid_field_value?('abc')
   end
 
+  def test_timewithzone_field_validation
+    f = CustomField.new(:field_format => 'timewithzone')
+
+    assert f.valid_field_value?(nil)
+    assert f.valid_field_value?('')
+    assert !f.valid_field_value?(' ')
+    assert f.valid_field_value?('1975-07-14T00:00')
+    assert !f.valid_field_value?('1975-07-33T00:00')
+    assert !f.valid_field_value?('1975-07-14T25:00')
+    assert f.valid_field_value?('1975-07-14T00:59')
+    assert !f.valid_field_value?('1975-07-14T00:60')
+    assert !f.valid_field_value?('abc')
+  end
+
   def test_list_field_validation
     f = CustomField.new(:field_format => 'list', :possible_values => ['value1', 'value2'])
 
