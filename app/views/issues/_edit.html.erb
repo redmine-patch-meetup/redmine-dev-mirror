@@ -75,7 +75,7 @@
     <%= submit_tag l(:button_submit) %>
     <%= link_to(
           l(:button_cancel), issue_path(id: @issue.id),
-          :onclick => params[:action] == 'show' ? "$('#update').hide(); return false;" : ''
+          :onclick => params[:action] == 'show' ? "window.location.reload();" : ''
         ) %>
     <%= hidden_field_tag 'prev_issue_id', @prev_issue_id if @prev_issue_id %>
     <%= hidden_field_tag 'next_issue_id', @next_issue_id if @next_issue_id %>

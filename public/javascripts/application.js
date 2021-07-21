@@ -29,15 +29,15 @@ function showAndScrollTo(id, focus) {
 
 function showAndScrollToEditIssue() {
   $('#update h3').show();
-  $('#attributes').show();
-  $('#log_time').show();
+  $('#attributes').show(); $('#attributes input, #attributes select').prop('disabled', false)
+  $('#log_time').show(); $('#log_time input, #log_time select').prop('disabled', false)
   showAndScrollTo('update', 'issue_notes');
 }
 
 function showAndScrollToAddNotes() {
   $('#update h3').hide();
-  $('#attributes').hide();
-  $('#log_time').hide();
+  $('#attributes').hide();$('#attributes input, #attributes select').prop('disabled', true)
+  $('#log_time').hide();$('#log_time input, #log_time select').prop('disabled', true)
   showAndScrollTo('update', 'issue_notes');
 }
 
