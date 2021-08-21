@@ -1,7 +1,7 @@
 <table class="list workflows transitions transitions-<%= name %>">
 <thead>
-  <tr>
-    <th>
+  <tr class='fixed-row'>
+    <th class='fixed-column'>
       <%= link_to_function('', "toggleCheckboxesBySelector('table.transitions-#{name} input[type=checkbox]:not(:disabled)')",
                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
                            :class => 'no-tooltip icon-only icon-checked') %>
@@ -9,8 +9,8 @@
     </th>
     <th colspan="<%= @statuses.length %>"><%=l(:label_new_statuses_allowed)%></th>
   </tr>
-  <tr>
-    <td></td>
+  <tr class='fixed-row status'>
+    <td class='fixed-column'></td>
     <% for new_status in @statuses %>
     <td style="width:<%= 75 / @statuses.size %>%;">
       <%= link_to_function('', "toggleCheckboxesBySelector('table.transitions-#{name} input[type=checkbox]:not(:disabled).new-status-#{new_status.id}')",
@@ -26,7 +26,7 @@
   <% for old_status in [nil] + @statuses %>
   <% next if old_status.nil? && name != 'always' %>
   <tr>
-    <td class="name">
+    <td class="name fixed-column">
       <%= link_to_function('', "toggleCheckboxesBySelector('table.transitions-#{name} input[type=checkbox]:not(:disabled).old-status-#{old_status.try(:id) || 0}')",
                            :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
                            :class => 'no-tooltip icon-only icon-checked') %>
