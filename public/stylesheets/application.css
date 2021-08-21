@@ -773,11 +773,13 @@ table.transitions td.enabled {background: #bfb;}
   table.transitions td {
     min-width: 50px;
   }
+  body.controller-issues div.autoscroll,
   .sticky-table-wrapper {
     max-height: 500px;
   }
 }
 
+body.controller-issues div.autoscroll,
 .sticky-table-wrapper {
   table-layout: fixed;
   overflow-x: auto;
@@ -785,10 +787,13 @@ table.transitions td.enabled {background: #bfb;}
   position: relative;
 }
 
+body.controller-issues div.autoscroll table.issues,
 .sticky-table-wrapper table {
   overflow-y: scroll;
   overflow-x: scroll;
 }
+body.controller-issues div.autoscroll table.issues thead tr td,
+body.controller-issues div.autoscroll table.issues thead tr th,
 .sticky-table-wrapper table tr.fixed-row td, .sticky-table-wrapper table tr.fixed-row th {
   position: -webkit-sticky;
   position: sticky;
@@ -1888,6 +1893,7 @@ img.filecontent.image {background-image: url(../images/transparent.png);}
   #wiki_add_attachment { display:none; }
   .hide-when-print, .pagination ul.pages, .pagination .per-page { display: none !important; }
   .autoscroll {overflow-x: visible;}
+  body.controller-issues div.autoscroll table.issues,
   .sticky-table-wrapper table { overflow-x: visible; overflow-y: visible; }
   table.list {margin-top:0.5em;}
   table.list th, table.list td {border: 1px solid #aaa;}
