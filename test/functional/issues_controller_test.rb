@@ -227,7 +227,8 @@ class IssuesControllerTest < Redmine::ControllerTest
       },
       'tracker_id' => {
         '3' => {:op => '=', :values => ['3']},
-        '=3' => {:op => '=', :values => ['3']}
+        '=3' => {:op => '=', :values => ['3']},
+        '=1,2,3' => {:op => '=', :values => ['1,2,3']}
       },
       'start_date' => {
         '2011-10-12' => {:op => '=', :values => ['2011-10-12']},
