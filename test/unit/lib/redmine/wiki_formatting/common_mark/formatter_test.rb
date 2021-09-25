@@ -147,16 +147,16 @@ class Redmine::WikiFormatting::CommonMark::FormatterTest < ActionView::TestCase
         [^1]: This is the foot note
       STR
 
-      expected = <<~EXPECTED
-        <p>This is some text<sup><a href="#fn1" id="fnref1">1</a></sup>.</p>
+      expected = <<~'EXPECTED'
+        <p>This is some text<sup><a href="#fn\-?1"( id="fnref1")?>1<\/a><\/sup>\.</p>
          <ol>
-        <li id="fn1">
-        <p>This is the foot note <a href="#fnref1">↩</a></p>
-        </li>
-        </ol>
+        <li( id="fn1")?>
+        <p>This is the foot note <a href="#fnref\-?1"( aria\-label="Back to content")?>↩</a></p>
+        <\/li>
+        <\/ol>
       EXPECTED
 
-      assert_equal expected.gsub(%r{[\r\n\t]}, ''), format(text).gsub(%r{[\r\n\t]}, '').rstrip
+      assert_match %r{#{expected.gsub(%r{[\r\n\t]}, '')}}, format(text).gsub(%r{[\r\n\t]}, '').rstrip
     end
 
     STR_WITH_PRE = [
