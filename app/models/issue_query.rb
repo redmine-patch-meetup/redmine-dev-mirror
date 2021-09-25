@@ -457,12 +457,34 @@ class IssueQuery < Query
   # Returns the versions
   # Valid options are :conditions
   def versions(options={})
-    Version.visible.
-      where(project_statement).
-      where(options[:conditions]).
-      includes(:project).
-      references(:project).
-      to_a
+    if project.present?
+      r = project.root? ? project : project.root
+      Version.visible.
+        where(options[:conditions]).
+        where(
+          "#{Project.table_name}.id = #{project.id}" \
+          " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" \
+          " #{Version.table_name}.sharing = 'system'" \
+          " OR (#{Project.table_name}.lft >= #{r.lft}" \
+          " AND #{Project.table_name}.rgt <= #{r.rgt}" \
+          " AND #{Version.table_name}.sharing = 'tree')" \
+          " OR (#{Project.table_name}.lft < #{project.lft}" \
+          " AND #{Project.table_name}.rgt > #{project.rgt}" \
+          " AND #{Version.table_name}.sharing IN ('hierarchy', 'descendants'))" \
+          " OR (#{Project.table_name}.lft > #{project.lft}" \
+          " AND #{Project.table_name}.rgt < #{project.rgt}" \
+          " AND #{Version.table_name}.sharing = 'hierarchy')" \
+          "))"
+        ).
+        to_a
+    else
+      Version.visible.
+        where(project_statement).
+        where(options[:conditions]).
+        includes(:project).
+        references(:project).
+        to_a
+    end
   rescue ::ActiveRecord::StatementInvalid => e
     raise StatementInvalid.new(e.message)
   end
