@@ -24,12 +24,9 @@ module IconsHelper
     file_path = "#{Rails.root}/#{path}/#{icon}.svg"
 
     if File.exists?(file_path)
-      # cache { File.read(file_path).html_safe }
-      file = File.read(file_path)
-
-      doc = Nokogiri::HTML::DocumentFragment.parse file
-      svg = doc.at_css 'svg'
-      svg["class"] = css_class.join(' ')
+      doc = content_tag(:svg,:class => css_class, :xmlns => "http://www.w3.org/2000/svg") do
+        content_tag(:use, '', :href => "/svgs/#{icon}.svg#icon")
+      end
     else
       doc = "<!-- SVG #{icon} not found -->"
     end
