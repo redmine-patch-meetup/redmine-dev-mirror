@@ -223,8 +223,8 @@ div + .drdn-items {border-top:1px solid #ccc;}
 
 .contextual .drdn-content {top:18px;}
 .contextual .drdn-items {padding:2px; min-width: 160px;}
-.contextual .drdn-items>a {padding: 5px 8px;}
-.contextual .drdn-items>a.icon {padding-left: 24px; background-position-x: 4px;}
+.contextual .drdn-items>a {display: flex; padding: 5px 8px;}
+.contextual .drdn-items>a.icon:not(.icon-svg) {padding-left: 24px; background-position-x: 4px;}
 .contextual .drdn-items>a:hover {color:#2A5685; border:1px solid #628db6; background-color:#eef5fd; border-radius:3px;}
 
 #project-jump.drdn {width:200px;display:inline-block;}
@@ -464,7 +464,7 @@ div.square {
   width: .6em; height: .6em;
 }
 .contextual {float:right; white-space: nowrap; line-height:1.4em;margin:5px 0px; padding-left: 10px; font-size:0.9em;}
-.contextual .icon {padding-top: 2px; padding-bottom: 3px;}
+.contextual .icon:not(.icon-svg) {padding-top: 2px; padding-bottom: 3px;}
 .contextual input, .contextual select {font-size:0.9em;}
 .message .contextual { margin-top: 0; }
 
@@ -1497,37 +1497,48 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
   white-space: pre-wrap;
 }
 
+/***** SVGs ******/
+.s16 {
+  width: 16px;
+  height: 16px;
+}
+
+.s14 {
+  width: 14px;
+  height: 14px;
+}
+
+.s12 {
+  width: 12px;
+  height: 12px;
+}
+
 /***** Icons *****/
-.icon {
+.icon:not(.icon-svg) {
   background-position: 0% 50%;
   background-repeat: no-repeat;
   padding-left: 20px;
 }
-.icon-only {
-  background-position: 0% 50%;
-  background-repeat: no-repeat;
-  padding-left: 16px;
-  display: inline-block;
-  width: 0;
-  height: 16px;
-  overflow: hidden;
-  padding-top: 0;
-  padding-bottom: 0;
-  font-size: 8px;
-  vertical-align: middle;
-}
-.icon-only::after {
-  content: "\a0";
+.icon.icon-svg {
+  display: inline-flex;
 }
 
-.icon-add { background-image: url(../images/add.png); }
-.icon-edit { background-image: url(../images/edit.png); }
-.icon-copy { background-image: url(../images/copy.png); }
+a svg, .icon svg {
+  fill: #169;
+  margin-right: 4px;
+}
+
+
+/*.icon-fav svg { fill: #fc8c12; }*/
+
+.icon-add:not(.icon-svg) { background-image: url(../images/add.png); }
+.icon-edit:not(.icon-svg) { background-image: url(../images/edit.png); }
+.icon-copy:not(.icon-svg) { background-image: url(../images/copy.png); }
 .icon-duplicate { background-image: url(../images/duplicate.png); }
-.icon-del { background-image: url(../images/delete.png); }
+.icon-del:not(.icon-svg) { background-image: url(../images/delete.png); }
 .icon-move { background-image: url(../images/move.png); }
 .icon-save { background-image: url(../images/save.png); }
-.icon-download { background-image: url(../images/download.png); }
+.icon-download:not(.icon-svg) { background-image: url(../images/download.png); }
 .icon-cancel { background-image: url(../images/cancel.png); }
 .icon-multiple { background-image: url(../images/table_multiple.png); }
 .icon-folder { background-image: url(../images/folder.png); }
@@ -1536,21 +1547,21 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
 .icon-user { background-image: url(../images/user.png); }
 .icon-project, .icon-projects { background-image: url(../images/projects.png); }
 .icon-help { background-image: url(../images/help.png); }
-.icon-attachment  { background-image: url(../images/attachment.png); }
+.icon-attachment:not(.icon-svg)  { background-image: url(../images/attachment.png); }
 .icon-history  { background-image: url(../images/history.png); }
 .icon-time-entry, .icon-time  { background-image: url(../images/time.png); }
-.icon-time-add  { background-image: url(../images/time_add.png); }
+.icon-time-add:not(.icon-svg)  { background-image: url(../images/time_add.png); }
 .icon-stats  { background-image: url(../images/stats.png); }
 .icon-warning  { background-image: url(../images/warning.png); }
 .icon-error { background-image: url(../images/exclamation.png); }
-.icon-fav  { background-image: url(../images/fav.png); }
-.icon-fav-off  { background-image: url(../images/fav_off.png); }
+.icon-fav:not(.icon-svg)  { background-image: url(../images/fav.png); }
+.icon-fav-off:not(.icon-svg)  { background-image: url(../images/fav_off.png); }
 .icon-reload  { background-image: url(../images/reload.png); }
 .icon-lock, .icon-locked  { background-image: url(../images/locked.png); }
 .icon-unlock  { background-image: url(../images/unlock.png); }
 .icon-checked  { background-image: url(../images/toggle_check.png); }
 .icon-report  { background-image: url(../images/report.png); }
-.icon-comment, .icon-comments  { background-image: url(../images/comment.png); }
+.icon-comment:not(.icon-svg), .icon-comments  { background-image: url(../images/comment.png); }
 .icon-summary  { background-image: url(../images/lightning.png); }
 .icon-server-authentication { background-image: url(../images/server_key.png); }
 .icon-issue { background-image: url(../images/ticket.png); }
@@ -1586,7 +1597,7 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
 .icon-project { background-image: url(../images/projects.png); }
 .icon-add-bullet { background-image: url(../images/bullet_add.png); }
 .icon-shared { background-image: url(../images/link.png); }
-.icon-actions { background-image: url(../images/3_bullets.png); }
+.icon-actions:not(.icon-svg) { background-image: url(../images/3_bullets.png); }
 .icon-sort-handle { background-image: url(../images/reorder.png); }
 .icon-expanded { background-image: url(../images/arrow_down.png); }
 .icon-collapsed { background-image: url(../images/arrow_right.png); }
@@ -1618,7 +1629,7 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
 .icon-file.application-pdf { background-image: url(../images/files/pdf.png); }
 .icon-file.application-zip { background-image: url(../images/files/zip.png); }
 .icon-file.application-gzip { background-image: url(../images/files/zip.png); }
-.icon-copy-link { background-image: url(../images/copy_link.png); }
+.icon-copy-link:not(.icon-svg) { background-image: url(../images/copy_link.png); }
 
 .sort-handle.ajax-loading { background-image: url(../images/loading.gif); }
 tr.ui-sortable-helper { border:1px solid #e4e4e4; }

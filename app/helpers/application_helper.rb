@@ -126,9 +126,14 @@ module ApplicationHelper
   # * :download - Force download (default: false)
   def link_to_attachment(attachment, options={})
     text = options.delete(:text) || attachment.filename
+    icon = 'paperclip'
+    icon_only = false
+
     if options.delete(:download)
       route_method = :download_named_attachment_url
       options[:filename] = attachment.filename
+      icon = 'download'
+      icon_only = true
     else
       route_method = :attachment_url
       # make sure we don't have an extraneous :filename in the options
@@ -137,7 +142,7 @@ module ApplicationHelper
     html_options = options.slice!(:only_path, :filename)
     options[:only_path] = true unless options.key?(:only_path)
     url = send(route_method, attachment, options)
-    link_to text, url, html_options
+    link_to labeled_icon(text, icon, icon_only: icon_only, size: 12), url, html_options
   end
 
   # Generates a link to a SCM revision
@@ -797,7 +802,7 @@ module ApplicationHelper
     content = capture(&block)
     if content.present?
       trigger =
-        content_tag('span', l(:button_actions), :class => 'icon-only icon-actions',
+        content_tag('span', labeled_icon(l(:button_actions), 'ellipsis-h', icon_only: true), :class => 'icon icon-actions icon-svg',
                     :title => l(:button_actions))
       trigger = content_tag('span', trigger, :class => 'drdn-trigger')
       content = content_tag('div', content, :class => 'drdn-items')
@@ -1832,8 +1837,8 @@ module ApplicationHelper
 
   def copy_object_url_link(url)
     link_to_function(
-      l(:button_copy_link), 'copyTextToClipboard(this);',
-      class: 'icon icon-copy-link',
+      labeled_icon(l(:button_copy_link), 'link'), 'copyTextToClipboard(this);',
+      class: 'icon icon-copy-link icon-svg',
       data: {'clipboard-text' => url}
     )
   end
