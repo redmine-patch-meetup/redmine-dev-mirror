@@ -90,6 +90,10 @@ class Redmine::ApiTest::ProjectsTest < Redmine::ApiTest::Base
     assert_response :success
     assert_equal 'application/xml', @response.media_type
 
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Searchable field"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Database"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Float field"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Custom date"]'
     assert_select 'issue_custom_fields[type=array] custom_field[name="Project 1 cf"]'
   end
 
