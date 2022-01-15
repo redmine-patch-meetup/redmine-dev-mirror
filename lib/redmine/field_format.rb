@@ -583,6 +583,48 @@ module Redmine
       end
     end
 
+    class TimewithzoneFormat < Unbounded
+      add 'timewithzone'
+      self.searchable_supported = true      # FIXME
+      self.form_partial = 'custom_fields/formats/timewithzone'
+      
+      def set_custom_field_value(custom_field, custom_field_value, value)
+        value.in_time_zone(User.current.time_zone).in_time_zone('UTC').iso8601 rescue value
+      end
+      
+      def validate_single_value(custom_field, value, customized=nil)
+        if /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.match?(value)
+          []
+        else
+          [::I18n.t('activerecord.errors.messages.not_a_date')]
+        end
+      end
+      
+      def cast_single_value(custom_field, value, customized=nil)
+        value.to_time.in_time_zone(User.current.time_zone) rescue nil
+      end
+      
+      def edit_tag(view, tag_id, tag_name, custom_value, options={})
+        # value is a string in utc without tz,
+        # .to_time transforms value to Time in utc with tz=utc
+        # .in_time_zone transforms Time to TimeWithZone in user's tz or Time if tz=nil
+        # .iso8601 transforms to string like yyyy-MM-ddThh:mm:ss+tz
+        # .slice trims the timezone, as datetime_local
+        time_local = !custom_value.value || custom_value.value.empty? ? nil :
+          custom_value.value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
+        view.datetime_local_field_tag(tag_name, time_local, options.merge(:id => tag_id, :size => 12)) +
+          view.datetimepicker_for(tag_id)
+      end
+
+      def bulk_edit_tag(view, tag_id, tag_name, custom_field, objects, value, options={})
+        time_local = !custom_value.value ? nil :
+          custom_value.value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16)
+        view.datetime_local_field_tag(tag_name, time_local, options.merge(:id => tag_id, :size => 12)) +
+          view.datetimepicker_for(tag_id) +
+          bulk_clear_tag(view, tag_id, tag_name, custom_field, value)
+      end
+    end
+
     class List < Base
       self.multiple_supported = true
       field_attributes :edit_tag_style

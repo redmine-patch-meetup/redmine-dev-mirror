@@ -146,3 +146,12 @@ custom_fields_011:
   - Other value
   field_format: list
   position: 1
+custom_fields_012:
+  id: 12
+  name: Epoch
+  type: IssueCustomField
+  is_for_all: true
+  possible_values: ""
+  field_format: timewithzone
+  position: 1
+

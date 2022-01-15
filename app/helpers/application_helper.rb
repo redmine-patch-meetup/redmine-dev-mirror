@@ -1620,6 +1620,14 @@ module ApplicationHelper
     )
   end
 
+  def datetimepicker_for(field_id)
+    javascript_tag(
+      "$(function() { $('##{field_id}').attr('type','datetime-local')" +
+      ".attr('pattern','[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}')" +
+      ".attr('placeholder','yyyy-mm-ddThh:mm'); });"
+    )
+  end
+
   def include_calendar_headers_tags
     unless @calendar_headers_tags_included
       tags = ''.html_safe
