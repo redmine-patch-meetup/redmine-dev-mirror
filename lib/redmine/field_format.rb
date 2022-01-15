@@ -589,6 +589,10 @@ module Redmine
       self.form_partial = 'custom_fields/formats/timewithzone'
       
       def set_custom_field_value(custom_field, custom_field_value, value)
+        # modify already stored default_value at custom_fields_controller.rb#update (Line 65)
+        if !custom_field_value.customized.present? and custom_field.default_value === value
+          custom_field.default_value = custom_field.default_value.in_time_zone(User.current.time_zone).utc.iso8601 rescue custom_field.default_value
+        end
         # value is datetime_local in user's time_zone but without timezone
         #returns iso8601 formatted string trailing Z
         value.in_time_zone(User.current.time_zone).utc.iso8601 rescue value
@@ -608,23 +612,28 @@ module Redmine
         value.in_time_zone(User.current.time_zone) rescue nil
       end
       
+      def self.time_local(value)
+        !value || value.empty? ? nil :
+          value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
+      end
+      
+      def self.timezone(value)
+        (value.to_time rescue Time.now()).in_time_zone(User.current.time_zone).zone
+      end
+
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
         # value is a iso8601 formatted string trailing Z
         # .to_time transforms value to Time in utc with tz=utc
         # .in_time_zone transforms Time to TimeWithZone in user's tz or Time if tz=nil
         # .iso8601 transforms to string like yyyy-MM-ddThh:mm:ss+tz
         # .slice trims the timezone, as datetime_local
-        time_local = !custom_value.value || custom_value.value.empty? ? nil :
-        custom_value.value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
-        view.datetime_local_field_tag(tag_name, time_local, options.merge(:id => tag_id, :size => 12)) +
-        view.datetimepicker_for(tag_id)
+        view.datetime_local_field_tag(tag_name, time_local(custom_value.value), options.merge(:id => tag_id, :size => 12)) +
+        view.datetimepicker_for(tag_id)  + " (#{timezone(custom_value.value)})"
       end
       
       def bulk_edit_tag(view, tag_id, tag_name, custom_field, objects, value, options={})
-        time_local = !value || value.empty? ? nil :
-        value.to_time.in_time_zone(User.current.time_zone).iso8601.slice(0,16) rescue nil
-        view.datetime_local_field_tag(tag_name, time_local, options.merge(:id => tag_id, :size => 12)) +
-        view.datetimepicker_for(tag_id) +
+        view.datetime_local_field_tag(tag_name, time_local(value), options.merge(:id => tag_id, :size => 12)) +
+        view.datetimepicker_for(tag_id)  + " (#{timezone(value)})" +
           bulk_clear_tag(view, tag_id, tag_name, custom_field, value)
       end
     end
