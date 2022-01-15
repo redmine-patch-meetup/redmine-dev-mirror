@@ -337,11 +337,12 @@ class IssuesTest < Redmine::IntegrationTest
   def test_issue_with_timewithzone_custom_field
     field = IssueCustomField.find(12)
     # TODO default_language, default_timezone
-    user = User.find_by_login('jsmith')
+    log_user('jsmith', 'jsmith')
+    user = User.find(session[:user_id])
     
     # get issues/14 in tz=nil
     assert_nil user.preference.time_zone
-    get '/issues/14', :headers => credentials(user.login)
+    get '/issues/14'
     assert_response :success
     assert_select ".cf_#{field.id} .value", :text => '03/11/2011 05:46 AM'
     assert_select 'input[name=?][value=?]', "issue[custom_field_values][#{field.id}]", '2011-03-11T05:46'
@@ -349,7 +350,7 @@ class IssuesTest < Redmine::IntegrationTest
     # get issues/14 in tz='UTC'
     user.preference.time_zone = 'UTC'
     user.preference.save
-    get '/issues/14', :headers => credentials(user.login)
+    get '/issues/14'
     assert_response :success
     assert_select ".cf_#{field.id} .value", :text => '03/11/2011 05:46 AM'
     assert_select 'input[name=?][value=?]', "issue[custom_field_values][#{field.id}]", '2011-03-11T05:46'
@@ -359,17 +360,14 @@ class IssuesTest < Redmine::IntegrationTest
     user.preference.save
     user.language = "ja"
     user.save
-    get '/issues/14', :headers => credentials(user.login)
+    get '/issues/14'
     assert_response :success
     assert_select ".cf_#{field.id} .value", :text => '2011/03/11 14:46'
     assert_select 'input[name=?][value=?]', "issue[custom_field_values][#{field.id}]", '2011-03-11T14:46'
 
     # update issues/14 in lang="ja", tz='Tokyo' (+0900)
-    get '/issues/14', :headers => credentials(user.login)
-    token = HTMLSelector.new(["input[type=hidden][name=authenticity_token]"]) {nodeset document_root_element}.select.first[:value]
-    put '/issues/14', :headers => credentials(user.login),
+    put '/issues/14',
     :params => {
-      :authenticity_token => token,
       :issue => {
         :custom_field_values => {field.id.to_s => "1985-08-12T18:56"}  # in tz=Asia/Tokyo +0900
       }
@@ -379,11 +377,8 @@ class IssuesTest < Redmine::IntegrationTest
     # update issues/14 in tz=nil
     user.preference.time_zone = nil
     user.preference.save
-    get '/issues/14', :headers => credentials(user.login)
-    token = HTMLSelector.new(["input[type=hidden][name=authenticity_token]"]) {nodeset document_root_element}.select.first[:value]
-    put '/issues/14', :headers => credentials(user.login),
+    put '/issues/14',
     :params => {
-      :authenticity_token => token,
       :issue => {
         :custom_field_values => {field.id.to_s => "1912-04-14T23:40"}  # in UTC
       }
