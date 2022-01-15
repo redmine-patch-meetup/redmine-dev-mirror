@@ -19,7 +19,7 @@
 
 require File.expand_path('../../test_helper', __FILE__)
 
-class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
+class CustomFieldsTimestampTest < Redmine::IntegrationTest
   fixtures :projects,
            :users, :email_addresses,
            :user_preferences,
@@ -44,7 +44,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     @user = User.find(session[:user_id])
   end
 
-  def test_get_issue_with_timewithzone_custom_field
+  def test_get_issue_with_timestamp_custom_field
     assert_nil ENV['TZ']
     assert_equal 'UTC', RedmineApp::Application.config.time_zone
     assert_equal :local, RedmineApp::Application.config.active_record.default_timezone
@@ -86,7 +86,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     assert_response :success
   end
 
-  def test_put_issue_with_timewithzone_custom_field
+  def test_put_issue_with_timestamp_custom_field
     # update issues/14 in lang="ja", tz='Tokyo' (+0900)
     @user.preference.time_zone = 'Tokyo'
     @user.preference.save
@@ -114,7 +114,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     assert_equal "1912-04-14T23:40:00Z", CustomValue.find_by(:customized_id=>@issue.id, :custom_field_id => @field.id).value
   end
 
-  def test_put_issue_with_timewithzone_custom_field_mail
+  def test_put_issue_with_timestamp_custom_field_mail
     
     ActionMailer::Base.deliveries.clear
     Setting.plain_text_mail = '0'
@@ -151,7 +151,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     end
   end
 
-  test "timewithzone may always utc.iso8601 via api" do
+  test "timestamp may always utc.iso8601 via api" do
     @user.preference.time_zone = 'Tokyo'
     @user.preference.save
     @user.language = "ja"
@@ -160,7 +160,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
       get '/issues/3.xml', :headers => credentials(@user.login)
       assert_response :success
       assert_equal 'application/xml', response.media_type
-      assert_select "custom_field[id=12] value", '2011-03-11T05:46:00Z', 'timewithzone may always utc.iso8601 via api'
+      assert_select "custom_field[id=12] value", '2011-03-11T05:46:00Z', 'timestamp may always utc.iso8601 via api'
     end
   end
 

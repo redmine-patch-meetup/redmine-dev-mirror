@@ -583,11 +583,11 @@ module Redmine
       end
     end
 
-    class TimewithzoneFormat < Unbounded
-      add 'timewithzone'
+    class TimestampFormat < Unbounded
+      add 'timestamp'
       self.is_filter_supported = false
       self.searchable_supported = false
-      self.form_partial = 'custom_fields/formats/timewithzone'
+      self.form_partial = 'custom_fields/formats/timestamp'
       
       def set_custom_field_value(custom_field, custom_field_value, value)
         # modify already stored default_value at custom_fields_controller.rb#update (Line 65)
@@ -627,13 +627,13 @@ module Redmine
       end
 
       def edit_tag(view, tag_id, tag_name, custom_value, options={})
-        view.datetime_local_field_tag(tag_name, TimewithzoneFormat.time_local(custom_value.value), options.merge(:id => tag_id, :size => 12)) +
-        view.datetimepicker_for(tag_id)  + " (#{TimewithzoneFormat.timezone(custom_value.value)})"
+        view.datetime_local_field_tag(tag_name, TimestampFormat.time_local(custom_value.value), options.merge(:id => tag_id, :size => 12)) +
+        view.datetimepicker_for(tag_id)  + " (#{TimestampFormat.timezone(custom_value.value)})"
       end
       
       def bulk_edit_tag(view, tag_id, tag_name, custom_field, objects, value, options={})
-        view.datetime_local_field_tag(tag_name, TimewithzoneFormat.time_local(value), options.merge(:id => tag_id, :size => 12)) +
-        view.datetimepicker_for(tag_id)  + " (#{TimewithzoneFormat.timezone(value)})" +
+        view.datetime_local_field_tag(tag_name, TimestampFormat.time_local(value), options.merge(:id => tag_id, :size => 12)) +
+        view.datetimepicker_for(tag_id)  + " (#{TimestampFormat.timezone(value)})" +
           bulk_clear_tag(view, tag_id, tag_name, custom_field, value)
       end
     end

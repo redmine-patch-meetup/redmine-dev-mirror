@@ -1,0 +1,4 @@
+<p><%= f.datetime_local_field(:default_value, :value => Redmine::FieldFormat::TimestampFormat.time_local(@custom_field.default_value), :size => 12) %>
+(<%= Redmine::FieldFormat::TimestampFormat.timezone(@custom_field.default_value) %>)</p>
+<%= datetimepicker_for('custom_field_default_value') %>
+<p><%= f.text_field :url_pattern, :size => 50, :label => :label_link_values_to %></p>

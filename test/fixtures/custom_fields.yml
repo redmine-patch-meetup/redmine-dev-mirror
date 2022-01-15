@@ -152,6 +152,6 @@ custom_fields_012:
   type: IssueCustomField
   is_for_all: true
   possible_values: ""
-  field_format: timewithzone
+  field_format: timestamp
   position: 1
 
