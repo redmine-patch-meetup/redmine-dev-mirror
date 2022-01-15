@@ -139,7 +139,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     }
 
     ActionMailer::Base.deliveries.each do |mail|
-      recipient = mail.header["BCC"].value.first
+      recipient = mail.header["To"].value.first
       case
       when recipient.starts_with?("jsmith@")
         assert_mail_body_match 'Epoch を 2011/03/11 14:46 から 2005/04/25 09:18 に変更', mail
