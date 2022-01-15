@@ -136,4 +136,17 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     end
   end
 
+  test "timewithzone may always utc.iso8601 via api" do
+    @user.preference.time_zone = 'Tokyo'
+    @user.preference.save
+    @user.language = "ja"
+    @user.save
+    with_settings :rest_api_enabled => '1' do
+      get '/issues/3.xml', :headers => credentials(@user.login)
+      assert_response :success
+      assert_equal 'application/xml', response.media_type
+      assert_select "custom_field[id=12] value", '2011-03-11T05:46:18Z', 'timewithzone may always utc.iso8601 via api'
+    end
+  end
+
 end
