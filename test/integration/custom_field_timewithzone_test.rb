@@ -36,7 +36,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
 
   def setup
     @field = IssueCustomField.find(12)
-    @issue = Issue.find(14)
+    @issue = Issue.find(3)
     log_user('jsmith', 'jsmith')
     @user = User.find(session[:user_id])
   end
@@ -86,7 +86,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
       }
     }
     assert_equal "1985-08-12T09:56:00Z", CustomValue.find_by(:customized_id=>@issue.id, :custom_field_id => @field.id).value
-    
+
     # update issues/14 in tz=nil
     @user.preference.time_zone = nil
     @user.preference.save
@@ -97,6 +97,43 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
       }
     }
     assert_equal "1912-04-14T23:40:00Z", CustomValue.find_by(:customized_id=>@issue.id, :custom_field_id => @field.id).value
+  end
+
+  def test_put_issue_with_timewithzone_custom_field_mail
+    
+    ActionMailer::Base.deliveries.clear
+    Setting.plain_text_mail = '0'
+    
+    @user.preference.time_zone = 'Tokyo'
+    @user.preference.save
+    @user.language = "ja"
+    @user.save
+    
+    watcher = User.find_by(:login => 'dlopper')
+    watcher.preference = UserPreference.new(:user_id => watcher.id)
+    watcher.preference.time_zone = 'Newfoundland'
+    watcher.preference.save
+    watcher.language = "fr"
+    watcher.save
+    
+    put "/issues/#{@issue.id}",
+    :params => {
+      :issue => {
+        :custom_field_values => {@field.id.to_s => "2005-04-25T09:18"}  # in tz=Asia/Tokyo +0900
+      }
+    }
+
+    ActionMailer::Base.deliveries.each do |mail|
+      recipient = mail.header["BCC"].value.first
+      case
+      when recipient.starts_with?("jsmith@")
+        assert_mail_body_match 'Epoch を 2011/03/11 14:46 から 2005/04/25 09:18 に変更', mail
+      when recipient.starts_with?("dlopper@")
+        assert_mail_body_match 'Epoch changé de 11/03/2011 02:16 à 24/04/2005 21:48', mail
+      else
+        flunk
+      end
+    end
   end
 
 end
