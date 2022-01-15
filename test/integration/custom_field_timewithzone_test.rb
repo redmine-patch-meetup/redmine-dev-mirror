@@ -22,6 +22,7 @@ require File.expand_path('../../test_helper', __FILE__)
 class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
   fixtures :projects,
            :users, :email_addresses,
+           :user_preferences,
            :roles,
            :members,
            :member_roles,
@@ -41,13 +42,12 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     @issue = Issue.find(3)
     log_user('jsmith', 'jsmith')
     @user = User.find(session[:user_id])
-    @user.preference ||= UserPreference.new(:user_id => @user.id)
   end
 
   def test_get_issue_with_timewithzone_custom_field
     assert_nil ENV['TZ']
     assert_equal 'UTC', RedmineApp::Application.config.time_zone
-    assert_equal :local, config.default_timezone
+    assert_equal :local, RedmineApp::Application.config.active_record.default_timezone
     assert_equal 'en', Setting.default_language
 
     # get issues/14 in tz=nil
@@ -160,7 +160,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
       get '/issues/3.xml', :headers => credentials(@user.login)
       assert_response :success
       assert_equal 'application/xml', response.media_type
-      assert_select "custom_field[id=12] value", '2011-03-11T05:46:18Z', 'timewithzone may always utc.iso8601 via api'
+      assert_select "custom_field[id=12] value", '2011-03-11T05:46:00Z', 'timewithzone may always utc.iso8601 via api'
     end
   end
 
@@ -195,11 +195,6 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     }
     assert_response :found
     assert_equal "2003-02-01T14:59:00Z", CustomField.find(@field.id).default_value
-
-    user.preference.time_zone = nil
-    user.preference.save
-    @field.default_value = nil
-    @field.save
   end
 
 end
