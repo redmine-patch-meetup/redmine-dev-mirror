@@ -39,8 +39,8 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
   def setup
     @field = IssueCustomField.find(12)
     @issue = Issue.find(3)
-    log_user('jsmith', 'jsmith')
-    @user = User.find(session[:user_id])
+    @user = User.find_by(:login => 'jsmith')
+    log_user(@user.login, @user.login)
   end
 
   def test_get_issue_with_timewithzone_custom_field
@@ -55,7 +55,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     assert_response :success
     assert_select ".cf_#{@field.id} .value", :text => '03/11/2011 05:46 AM'
     assert_select 'input[name=?][value=?]', "issue[custom_field_values][#{@field.id}]", '2011-03-11T05:46'
-    
+
     # get issues/14 in tz='UTC'
     @user.preference.time_zone = 'UTC'
     @user.preference.save
