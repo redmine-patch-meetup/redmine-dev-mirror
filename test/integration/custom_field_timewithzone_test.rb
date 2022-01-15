@@ -39,8 +39,9 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
   def setup
     @field = IssueCustomField.find(12)
     @issue = Issue.find(3)
-    @user = User.find_by(:login => 'jsmith')
-    log_user(@user.login, @user.login)
+    log_user('jsmith', 'jsmith')
+    @user = User.find(session[:user_id])
+    @user.preference ||= UserPreference.new(:user_id => @user.id)
   end
 
   def test_get_issue_with_timewithzone_custom_field
@@ -124,7 +125,7 @@ class CustomFieldsTimewithzoneTest < Redmine::IntegrationTest
     @user.save
     
     watcher = User.find_by(:login => 'dlopper')
-    watcher.preference = UserPreference.new(:user_id => watcher.id)
+    watcher.preference ||= UserPreference.new(:user_id => watcher.id)
     watcher.preference.time_zone = 'Newfoundland'
     watcher.preference.save
     watcher.language = "fr"
