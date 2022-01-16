@@ -166,6 +166,10 @@ module Redmine
               support.id.to_s
             ]
 
+            # set new project as private
+            # もし環境変数 が private だったら
+            Setting.default_projects_public = 0
+
             if workflow
               # Workflow
               Tracker.all.each do |t|
