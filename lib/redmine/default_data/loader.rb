@@ -166,9 +166,10 @@ module Redmine
               support.id.to_s
             ]
 
-            # set new project as private
-            # もし環境変数 が private だったら
-            Setting.default_projects_public = 0
+            # set new project as private if default_projects_public option is exist
+            if options[:default_projects_public] == 'private' 
+              Setting.default_projects_public = 0
+            end
 
             if workflow
               # Workflow

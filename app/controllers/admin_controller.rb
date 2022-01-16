@@ -55,8 +55,11 @@ class AdminController < ApplicationController
   # (roles, trackers, statuses, workflow, enumerations)
   def default_configuration
     if request.post?
+      options = {}
+      options[:default_projects_public] = params[:default_projects_public].presence || 'private'
+      
       begin
-        Redmine::DefaultData::Loader::load(params[:lang])
+        Redmine::DefaultData::Loader::load(params[:lang], options)
         flash[:notice] = l(:notice_default_data_loaded)
       rescue => e
         flash[:error] = l(:error_can_t_load_default_data, ERB::Util.h(e.message))
