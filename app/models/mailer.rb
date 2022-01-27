@@ -70,7 +70,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail for notifying user about a new issue
-  def issue_add(user, issue, recipients)
+  def issue_add(user, issue, recipients=nil)
     redmine_headers 'Project' => issue.project.identifier,
                     'Issue-Tracker' => issue.tracker.name,
                     'Issue-Id' => issue.id,
@@ -103,7 +103,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail for notifying user about an issue update
-  def issue_edit(user, journal, recipients)
+  def issue_edit(user, journal, recipients=nil)
     issue = journal.journalized
     redmine_headers 'Project' => issue.project.identifier,
                     'Issue-Tracker' => issue.tracker.name,
@@ -143,7 +143,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about a new document.
-  def document_added(user, document, author, recipients)
+  def document_added(user, document, author, recipients=nil)
     redmine_headers 'Project' => document.project.identifier
     @author = author
     @document = document

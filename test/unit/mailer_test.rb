@@ -531,6 +531,21 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  def test_issue_add_should_include_recipients_on_mail_footer
+    with_settings :show_recipients_in_mail_footer => '1' do
+      issue = Issue.find(1)
+      Mailer.deliver_issue_add(issue)
+      mail = last_email
+      assert_select_email do
+        assert_select 'span.recipients' do |span|
+          assert_include 'The following recipients have also received this email.', span.text
+          assert_include 'John Smith', span.text
+          assert_include 'Dave Lopper', span.text
+        end
+      end
+    end
+  end
+
   def test_issue_edit_subject_should_include_status_changes_if_setting_is_enabled
     with_settings :show_status_changes_in_mail_subject => 1 do
       issue = Issue.find(2)
@@ -653,6 +668,40 @@ class MailerTest < ActiveSupport::TestCase
     # @dlopper won't receive duplicated notifications
     assert_equal 3, ActionMailer::Base.deliveries.size
     assert_include User.find(1).mail, recipients
+  end
+
+  def test_issue_edit_should_include_recipients_on_mail_footer
+    with_settings :show_recipients_in_mail_footer => '1' do
+      issue = Issue.find(1)
+      issue.init_journal(User.current)
+      issue.update(:status_id => 4)
+      journal = issue.journals.last
+      Mailer.deliver_issue_edit(journal)
+      mail = last_email
+      assert_select_email do
+        assert_select 'span.recipients' do |span|
+          assert_include 'The following recipients have also received this email.', span.text
+          assert_include 'John Smith', span.text
+          assert_include 'Dave Lopper', span.text
+        end
+      end
+    end
+  end
+
+  def test_document_added_should_include_recipients_on_mail_footer
+    with_settings :show_recipients_in_mail_footer => '1' do
+      document = Document.find(1)
+      author = User.find(2)
+      Mailer.deliver_document_added(document, author)
+      mail = last_email
+      assert_select_email do
+        assert_select 'span.recipients' do |span|
+          assert_include 'The following recipients have also received this email.', span.text
+          assert_include 'John Smith', span.text
+          assert_include 'Dave Lopper', span.text
+        end
+      end
+    end
   end
 
   def test_issue_should_send_email_notification_with_suppress_empty_fields
