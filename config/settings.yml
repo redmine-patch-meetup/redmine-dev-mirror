@@ -341,3 +341,8 @@ timelog_accept_future_dates:
   default: 1
 show_status_changes_in_mail_subject:
   default: 1
+show_recipients_in_mail_footer:
+  default: 0
+show_recipients_limit:
+  format: int
+  default: 15

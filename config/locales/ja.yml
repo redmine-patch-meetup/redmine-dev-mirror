@@ -898,6 +898,7 @@ ja:
   text_issues_ref_in_commit_messages: コミットメッセージ内でチケットの参照/修正
   text_issue_added: "チケット %{id} を %{author} さんが作成しました。"
   text_issue_updated: "チケット %{id} を %{author} さんが更新しました。"
+  text_sent_email_to_recipients: 次のユーザーにもこのメールを送信しました。
   text_wiki_destroy_confirmation: 本当にこのwikiとその内容のすべてを削除しますか？
   text_issue_category_destroy_question: "%{count}件のチケットがこのカテゴリに割り当てられています。"
   text_issue_category_destroy_assignments: カテゴリの割り当てを削除する
@@ -1260,6 +1261,8 @@ ja:
   text_status_no_workflow: このステータスはどのトラッカーのワークフローでも使われていません
   setting_mail_handler_preferred_body_part: マルチパート (HTML) メールの優先パート
   setting_show_status_changes_in_mail_subject: 通知メールの題名にステータス変更の情報を挿入
+  setting_show_recipients_in_mail_footer: 通知メールのフッタに受信者の情報を挿入
+  setting_show_recipients_limit: 通知メールのフッタに挿入される受信者数の上限
   label_inherited_from_parent_project: 親プロジェクトから継承
   label_inherited_from_group: グループ %{name} から継承
   label_trackers_description: トラッカーの説明

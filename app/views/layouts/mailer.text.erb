@@ -6,3 +6,8 @@
 -- 
 <%= Setting.emails_footer %>
 <% end -%>
+<% if Setting.show_recipients_in_mail_footer? && @recipients.present? %>
+
+<%= l(:text_sent_email_to_recipients) %>
+<%= @recipients.take(Setting.show_recipients_limit.to_i).map(&:name).join(', ') %><%= '...' if @recipients.size > Setting.show_recipients_limit.to_i %>
+<% end -%>

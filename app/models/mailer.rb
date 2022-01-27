@@ -70,7 +70,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail for notifying user about a new issue
-  def issue_add(user, issue)
+  def issue_add(user, issue, recipients)
     redmine_headers 'Project' => issue.project.identifier,
                     'Issue-Tracker' => issue.tracker.name,
                     'Issue-Id' => issue.id,
@@ -82,6 +82,7 @@ class Mailer < ActionMailer::Base
     @author = issue.author
     @issue = issue
     @user = user
+    @recipients = recipients
     @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue)
     subject = "[#{issue.project.name} - #{issue.tracker.name} ##{issue.id}]"
     subject += " (#{issue.status.name})" if Setting.show_status_changes_in_mail_subject?
@@ -97,12 +98,12 @@ class Mailer < ActionMailer::Base
   def self.deliver_issue_add(issue)
     users = issue.notified_users | issue.notified_watchers | issue.notified_mentions
     users.each do |user|
-      issue_add(user, issue).deliver_later
+      issue_add(user, issue, users).deliver_later
     end
   end
 
   # Builds a mail for notifying user about an issue update
-  def issue_edit(user, journal)
+  def issue_edit(user, journal, recipients)
     issue = journal.journalized
     redmine_headers 'Project' => issue.project.identifier,
                     'Issue-Tracker' => issue.tracker.name,
@@ -118,6 +119,7 @@ class Mailer < ActionMailer::Base
     s += issue.subject
     @issue = issue
     @user = user
+    @recipients = recipients
     @journal = journal
     @journal_details = journal.visible_details
     @issue_url = url_for(:controller => 'issues', :action => 'show', :id => issue, :anchor => "change-#{journal.id}")
@@ -136,16 +138,17 @@ class Mailer < ActionMailer::Base
       journal.notes? || journal.visible_details(user).any?
     end
     users.each do |user|
-      issue_edit(user, journal).deliver_later
+      issue_edit(user, journal, users).deliver_later
     end
   end
 
   # Builds a mail to user about a new document.
-  def document_added(user, document, author)
+  def document_added(user, document, author, recipients)
     redmine_headers 'Project' => document.project.identifier
     @author = author
     @document = document
     @user = user
+    @recipients = recipients
     @document_url = url_for(:controller => 'documents', :action => 'show', :id => document)
     mail :to => user,
       :subject => "[#{document.project.name}] #{l(:label_document_new)}: #{document.title}"
@@ -158,7 +161,7 @@ class Mailer < ActionMailer::Base
   def self.deliver_document_added(document, author)
     users = document.notified_users
     users.each do |user|
-      document_added(user, document, author).deliver_later
+      document_added(user, document, author, users).deliver_later
     end
   end
 

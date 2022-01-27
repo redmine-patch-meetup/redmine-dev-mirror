@@ -7,6 +7,10 @@
 <p><%= setting_check_box :plain_text_mail %></p>
 
 <p><%= setting_check_box :show_status_changes_in_mail_subject %></p>
+
+<p><%= setting_check_box :show_recipients_in_mail_footer, :data => {:enables => '#settings_show_recipients_limit'} %></p>
+
+<p><%= setting_text_field :show_recipients_limit, :size => 6%></p>
 </div>
 
 <fieldset class="box" id="notified_events"><legend><%=l(:text_select_mail_notifications)%></legend>
