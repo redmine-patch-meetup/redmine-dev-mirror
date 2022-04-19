@@ -37,6 +37,10 @@ class Redmine::PluginTest < ActiveSupport::TestCase
     @klass.clear
   end
 
+  def gemfile_for_test?
+    File.expand_path(ENV['BUNDLE_GEMFILE']) == Rails.root.join('test/fixtures/gem_plugins/Gemfile').expand_path.to_s
+  end
+
   def test_register
     @klass.register :foo_plugin do
       name 'Foo plugin'
@@ -60,6 +64,29 @@ class Redmine::PluginTest < ActiveSupport::TestCase
     assert_equal 'This is a test plugin', plugin.description
     assert_equal '0.0.1', plugin.version
     assert_equal File.join(@klass.directory, 'foo_plugin', 'assets'), plugin.assets_directory
+  end
+
+  def test_gemified_plugin
+    skip unless gemfile_for_test?
+    path = Redmine::PluginLoader.find_path(plugin_id: "baz_plugin", plugin_dir: nil)
+    path.run_initializer
+    plugin = @klass.find('baz_plugin')
+    assert_equal :baz_plugin, plugin.id
+    assert_equal 'Baz Plugin', plugin.name
+    assert_equal 'https://example.org/plugins/baz', plugin.url
+    assert_equal 'johndoe,janedoe', plugin.author
+    assert_equal 'https://example.org/this_url_should_not_be_overwritten_with_gemspec', plugin.author_url
+    assert_equal 'This is a gemified plugin for Redmine', plugin.description
+    assert_equal '0.0.1', plugin.version
+  end
+
+  def test_invalid_gemified_plugin
+    skip unless gemfile_for_test?
+    path = Redmine::PluginLoader.find_path(plugin_id: nil, plugin_dir: File.join(@klass.directory, 'qux_plugin'))
+    e = assert_raises Redmine::InvalidPluginId do
+      path.run_initializer
+    end
+    assert_equal "The location of init.rb is different from #{Rails.root.join('test/fixtures/gem_plugins/baz')}. It called from #{Rails.root.join('test/fixtures/plugins/qux_plugin/init.rb')}", e.message
   end
 
   def test_register_should_raise_error_if_plugin_directory_does_not_exist

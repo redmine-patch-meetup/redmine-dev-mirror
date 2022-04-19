@@ -117,3 +117,10 @@ end
 Dir.glob File.expand_path("../plugins/*/{Gemfile,PluginGemfile}", __FILE__) do |file|
   eval_gemfile file
 end
+
+extension_gemfile = File.join(File.dirname(__FILE__), "Gemfile.extension")
+if File.exist?(extension_gemfile)
+  group :redmine_extension do
+    eval_gemfile extension_gemfile
+  end
+end

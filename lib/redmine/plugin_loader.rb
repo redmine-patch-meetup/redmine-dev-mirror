@@ -19,12 +19,24 @@
 
 module Redmine
   class PluginPath
-    attr_reader :assets_dir, :initializer
+    attr_reader :assets_dir, :initializer, :gemspec
 
-    def initialize(dir)
+    def initialize(dir, gemspec = nil)
       @dir = dir
+      @gemspec = gemspec
       @assets_dir = File.join dir, 'assets'
       @initializer = File.join dir, 'init.rb'
+      add_autoload_paths
+    end
+
+    def add_autoload_paths
+      # Add the plugin directories to rails autoload paths
+      engine_cfg = Rails::Engine::Configuration.new(self.to_s)
+      engine_cfg.paths.add 'lib', eager_load: true
+      engine_cfg.eager_load_paths.each do |dir|
+        Rails.autoloaders.main.push_dir dir
+        Rails.application.config.watchable_dirs[dir] = [:rb]
+      end
     end
 
     def run_initializer
@@ -82,6 +94,7 @@ module Redmine
   end
 
   class PluginLoader
+    class PluginIdDuplicated < StandardError; end
     # Absolute path to the directory where plugins are located
     cattr_accessor :directory
     self.directory = Rails.root.join('plugins')
@@ -102,7 +115,6 @@ module Redmine
 
     def self.load
       setup
-      add_autoload_paths
 
       Rails.application.config.to_prepare do
         PluginLoader.directories.each(&:run_initializer)
@@ -114,23 +126,39 @@ module Redmine
     def self.setup
       @plugin_directories = []
 
-      Dir.glob(File.join(directory, '*')).sort.each do |directory|
-        next unless File.directory?(directory)
+      Dir.glob(File.join(directory, '*')).sort.each do |dir|
+        next unless File.directory?(dir)
 
-        @plugin_directories << PluginPath.new(directory)
+        @plugin_directories << PluginPath.new(dir)
+      end
+
+      # If there are plugins under plugins/, do not register a gem with the same name.
+      plugin_specs.each do |spec|
+        dir = File.join(directory, spec.name)
+        if File.directory?(dir)
+          warn "WARN: \"#{spec.name}\" plugin installed as gems also exist in the \"#{dir}\" directory; use the ones in \"#{dir}\"."
+          next
+        end
+        @plugin_directories << PluginPath.new(spec.full_gem_path, spec)
       end
     end
 
-    def self.add_autoload_paths
-      directories.each do |directory|
-        # Add the plugin directories to rails autoload paths
-        engine_cfg = Rails::Engine::Configuration.new(directory.to_s)
-        engine_cfg.paths.add 'lib', eager_load: true
-        engine_cfg.eager_load_paths.each do |dir|
-          Rails.autoloaders.main.push_dir dir
-          Rails.application.config.watchable_dirs[dir] = [:rb]
-        end
+    def self.plugin_specs
+      specs = Bundler.definition
+                     .specs_for([:redmine_extension])
+                     .to_a
+                     .select{|s| s.name != 'bundler' && !s.metadata['redmine_plugin_id'].nil?}
+      duplicates = specs.group_by{|s| s.metadata['redmine_plugin_id']}.reject{|k,v| v.one?}.keys
+      raise PluginIdDuplicated.new("#{duplicates.join(",")} Duplicate plugin id") if duplicates.size > 0
+      specs
+    end
+
+    def self.find_path(plugin_id:, plugin_dir:)
+      path = directories.find {|d| d.gemspec.present? && d.gemspec.metadata['redmine_plugin_id'] == plugin_id.to_s }
+      if path.nil?
+        path = directories.find {|d| d.to_s == plugin_dir}
       end
+      path
     end
 
     def self.directories

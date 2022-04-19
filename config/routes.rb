@@ -404,13 +404,12 @@ Rails.application.routes.draw do
 
   get 'robots', :to => 'welcome#robots'
 
-  Dir.glob File.expand_path("#{Redmine::Plugin.directory}/*") do |plugin_dir|
-    file = File.join(plugin_dir, "config/routes.rb")
-    if File.exist?(file)
+  Redmine::Plugin.all.each do |plugin|
+    if file = plugin.routes
       begin
         instance_eval File.read(file)
       rescue SyntaxError, StandardError => e
-        puts "An error occurred while loading the routes definition of #{File.basename(plugin_dir)} plugin (#{file}): #{e.message}."
+        puts "An error occurred while loading the routes definition of #{File.basename(plugin.directory)} plugin (#{file}): #{e.message}."
         exit 1
       end
     end
