@@ -1,0 +1,7 @@
+original_gemfile = File.join(File.dirname(__FILE__), "../../../Gemfile")
+
+eval_gemfile original_gemfile
+
+group :redmine_extension do
+  gem 'baz', :path => './baz'
+end

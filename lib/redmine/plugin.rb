@@ -25,6 +25,9 @@ module Redmine
   # Exception raised when a plugin requirement is not met.
   class PluginRequirementError < StandardError; end
 
+  # Exception raised when plugin id and gemspec metadata is not met.
+  class InvalidPluginId < StandardError; end
+
   # Base class for Redmine plugins.
   # Plugins are registered using the <tt>register</tt> class method that acts as the public constructor.
   #
@@ -95,16 +98,17 @@ module Redmine
       p = new(id)
       p.instance_eval(&block)
 
-      # Set a default name if it was not provided during registration
-      p.name(id.to_s.humanize) if p.name.nil?
-      # Set a default directory if it was not provided during registration
-      p.directory(File.join(self.directory, id.to_s)) if p.directory.nil?
+      # Set a default attributes if it was not provided during registration
+      p.set_default_attrs File.join(self.directory, id.to_s)
 
       unless File.directory?(p.directory)
         raise PluginNotFound, "Plugin not found. The directory for plugin #{p.id} should be #{p.directory}."
       end
 
-      p.path = PluginLoader.directories.find {|d| d.to_s == p.directory}
+      loc =  caller_locations(1, 1).first.absolute_path
+      if p.has_initializer? && (File.dirname(loc) != p.directory)
+        raise InvalidPluginId, "The location of init.rb is different from #{p.directory}. It called from #{loc}"
+      end
 
       # Adds plugin locales if any
       # YAML translation files should be found under <plugin>/config/locales/
@@ -134,6 +138,13 @@ module Redmine
           )
         end
         @used_partials[partial] = p.id
+      end
+
+      # Load dependencies
+      if p.gem?
+        p.path.gemspec.dependencies.each do |d|
+          require d.name
+        end
       end
 
       registered_plugins[id] = p
@@ -188,6 +199,50 @@ module Redmine
 
     def <=>(plugin)
       self.id.to_s <=> plugin.id.to_s
+    end
+
+    def set_default_attrs(default_dir)
+      dir = directory || default_dir
+      self.path = PluginLoader.find_path(plugin_id: id, plugin_dir: dir)
+
+      if gem?
+        spec = path.gemspec
+        name spec.summary if spec.summary
+        author spec.authors.join(",") if spec.authors
+        description spec.description if spec.description
+        version spec.version.to_s if spec.version
+        url spec.homepage if spec.homepage
+        author_url spec.metadata["author_url"] if spec.metadata["author_url"]
+      end
+
+      # Set a default name if it was not provided during registration
+      name(id.to_s.humanize) if name.nil?
+
+      # Set a default directory if it was not provided during registration
+      if directory.nil?
+        if path.present?
+          directory(path.to_s)
+        else
+          directory(default_dir)
+        end
+      end
+    end
+
+    def gem?
+      path && path.gemspec.present?
+    end
+
+    def has_initializer?
+      path.present? && path.has_initializer?
+    end
+
+    def routes
+      file = File.join(directory, "config/routes.rb")
+      if File.exist?(file)
+        file
+      else
+        nil
+      end
     end
 
     # Sets a requirement on Redmine version

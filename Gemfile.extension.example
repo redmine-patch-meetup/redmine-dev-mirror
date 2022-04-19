@@ -1,0 +1,5 @@
+# vim: set ft=ruby
+# Copy this file to Gemfile.extension and add any rubygem plugins
+
+# Example:
+#   gem 'redmine_sample_plugin', '~> 1.1.0'
