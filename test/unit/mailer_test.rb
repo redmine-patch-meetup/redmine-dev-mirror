@@ -383,6 +383,10 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  def test_message_posted_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
+  end
+
   def test_reply_posted_message_id
     set_tmp_attachments_directory
     message = Message.find(3)
@@ -704,6 +708,12 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  def test_documents_file_added_should_include_recipients_on_mail_footer
+    # def test_attachments_added_should_include_recipients_on_mail_footer
+    # Mailer.deliver_attachments_added(document, author)
+    flunk 'Not Implemented'
+  end
+
   def test_issue_should_send_email_notification_with_suppress_empty_fields
     ActionMailer::Base.deliveries.clear
     with_settings :notified_events => %w(issue_added) do
@@ -754,6 +764,11 @@ class MailerTest < ActiveSupport::TestCase
     end
   end
 
+  def test_version_file_added_should_include_recipients_on_mail_footer
+    # def test_attachments_added_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
+  end
+
   def test_project_file_added
     attachements = [Attachment.find_by_container_type('Project')]
     assert Mailer.deliver_attachments_added(attachements)
@@ -762,6 +777,11 @@ class MailerTest < ActiveSupport::TestCase
     assert_select_email do
       assert_select "a[href=?]", "http://localhost:3000/projects/ecookbook/files"
     end
+  end
+
+  def test_project_file_added_should_include_recipients_on_mail_footer
+    # def test_attachments_added_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
   end
 
   def test_news_added_should_notify_project_news_watchers
@@ -786,6 +806,14 @@ class MailerTest < ActiveSupport::TestCase
                       :text => 'testfile.txt'
       end
     end
+  end
+
+  def test_news_added_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
+  end
+
+  def test_news_comments_added_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
   end
 
   def test_wiki_content_added
@@ -814,6 +842,10 @@ class MailerTest < ActiveSupport::TestCase
     assert_include User.find(1).mail, recipients
   end
 
+  def test_wiki_content_added_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
+  end
+
   def test_wiki_content_updated
     content = WikiContent.find(1)
     assert Mailer.deliver_wiki_content_updated(content)
@@ -839,6 +871,10 @@ class MailerTest < ActiveSupport::TestCase
     assert_include User.find(1).mail, recipients
   end
 
+  def test_wiki_content_updated_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
+  end
+
   def test_register
     token = Token.find(1)
     assert Mailer.deliver_register(token.user, token)
@@ -847,6 +883,10 @@ class MailerTest < ActiveSupport::TestCase
                     "http://localhost:3000/account/activate?token=#{token.value}",
                     :text => "http://localhost:3000/account/activate?token=#{token.value}"
     end
+  end
+
+  def test_account_activation_request_should_include_recipients_on_mail_footer
+    flunk 'Not Implemented'
   end
 
   def test_test_email_later
@@ -1090,6 +1130,16 @@ class MailerTest < ActiveSupport::TestCase
         assert_select 'a[href=?]', 'http://localhost:3000/my/account', :text => I18n.t(:label_my_account)
       end
     end
+  end
+
+  def test_security_notification_should_include_recipients_on_mail_footer
+    # 管理者を追加削除すると送信される
+    flunk 'Not Implemented'
+  end
+
+  def test_settings_updated_should_include_recipients_on_mail_footer
+    # リポジトリを変えると送信される
+    flunk 'Not Implemented'
   end
 
   def test_mailer_should_not_change_locale
