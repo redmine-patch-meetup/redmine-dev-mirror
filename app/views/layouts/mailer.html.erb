@@ -86,7 +86,7 @@ table, td, th {
 <% if Setting.show_recipients_in_mail_footer? && @recipients.present? %>
 <span class="recipients">
   <%= l(:text_sent_email_to_recipients) %><br>
-  <%= @recipients.take(Setting.show_recipients_limit.to_i).map(&:name).join(', ') %><%= '...' if @recipients.size > Setting.show_recipients_limit.to_i %>
+  <%= show_recipients @recipients %>
 </span>
 <% end %>
 </body>

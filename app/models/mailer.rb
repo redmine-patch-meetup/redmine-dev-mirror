@@ -24,6 +24,7 @@ class Mailer < ActionMailer::Base
   helper :application
   helper :issues
   helper :custom_fields
+  helper :mailer
 
   include Redmine::I18n
   include Roadie::Rails::Automatic
