@@ -166,7 +166,7 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about new attachements.
-  def attachments_added(user, attachments)
+  def attachments_added(user, attachments, recipients=nil)
     container = attachments.first.container
     added_to = ''
     added_to_url = ''
@@ -185,6 +185,7 @@ class Mailer < ActionMailer::Base
     redmine_headers 'Project' => container.project.identifier
     @attachments = attachments
     @user = user
+    @recipients = recipients
     @added_to = added_to
     @added_to_url = added_to_url
     mail :to => user,
@@ -205,18 +206,19 @@ class Mailer < ActionMailer::Base
     end
 
     users.each do |user|
-      attachments_added(user, attachments).deliver_later
+      attachments_added(user, attachments, users).deliver_later
     end
   end
 
   # Builds a mail to user about a new news.
-  def news_added(user, news)
+  def news_added(user, news, recipients=nil)
     redmine_headers 'Project' => news.project.identifier
     @author = news.author
     message_id news
     references news
     @news = news
     @user = user
+    @recipients = recipients
     @news_url = url_for(:controller => 'news', :action => 'show', :id => news)
     mail :to => user,
       :subject => "[#{news.project.name}] #{l(:label_news)}: #{news.title}"
@@ -229,12 +231,12 @@ class Mailer < ActionMailer::Base
   def self.deliver_news_added(news)
     users = news.notified_users | news.notified_watchers_for_added_news
     users.each do |user|
-      news_added(user, news).deliver_later
+      news_added(user, news, users).deliver_later
     end
   end
 
   # Builds a mail to user about a new news comment.
-  def news_comment_added(user, comment)
+  def news_comment_added(user, comment, recipients=nil)
     news = comment.commented
     redmine_headers 'Project' => news.project.identifier
     @author = comment.author
@@ -243,6 +245,7 @@ class Mailer < ActionMailer::Base
     @news = news
     @comment = comment
     @user = user
+    @recipients = recipients
     @news_url = url_for(:controller => 'news', :action => 'show', :id => news)
     mail :to => user,
      :subject => "Re: [#{news.project.name}] #{l(:label_news)}: #{news.title}"
@@ -256,12 +259,12 @@ class Mailer < ActionMailer::Base
     news = comment.commented
     users = news.notified_users | news.notified_watchers
     users.each do |user|
-      news_comment_added(user, comment).deliver_later
+      news_comment_added(user, comment, users).deliver_later
     end
   end
 
   # Builds a mail to user about a new message.
-  def message_posted(user, message)
+  def message_posted(user, message, recipients=nil)
     redmine_headers 'Project' => message.project.identifier,
                     'Topic-Id' => (message.parent_id || message.id)
     @author = message.author
@@ -269,6 +272,7 @@ class Mailer < ActionMailer::Base
     references message.root
     @message = message
     @user = user
+    @recipients = recipients
     @message_url = url_for(message.event_url)
     mail :to => user,
       :subject => "[#{message.board.project.name} - #{message.board.name} - msg#{message.root.id}] #{message.subject}"
@@ -284,18 +288,19 @@ class Mailer < ActionMailer::Base
     users |= message.board.notified_watchers
 
     users.each do |user|
-      message_posted(user, message).deliver_later
+      message_posted(user, message, users).deliver_later
     end
   end
 
   # Builds a mail to user about a new wiki content.
-  def wiki_content_added(user, wiki_content)
+  def wiki_content_added(user, wiki_content, recipients=nil)
     redmine_headers 'Project' => wiki_content.project.identifier,
                     'Wiki-Page-Id' => wiki_content.page.id
     @author = wiki_content.author
     message_id wiki_content
     @wiki_content = wiki_content
     @user = user
+    @recipients = recipients
     @wiki_content_url = url_for(:controller => 'wiki', :action => 'show',
                                       :project_id => wiki_content.project,
                                       :id => wiki_content.page.title)
@@ -313,18 +318,19 @@ class Mailer < ActionMailer::Base
   def self.deliver_wiki_content_added(wiki_content)
     users = wiki_content.notified_users | wiki_content.page.wiki.notified_watchers | wiki_content.notified_mentions
     users.each do |user|
-      wiki_content_added(user, wiki_content).deliver_later
+      wiki_content_added(user, wiki_content, users).deliver_later
     end
   end
 
   # Builds a mail to user about an update of the specified wiki content.
-  def wiki_content_updated(user, wiki_content)
+  def wiki_content_updated(user, wiki_content, recipients=nil)
     redmine_headers 'Project' => wiki_content.project.identifier,
                     'Wiki-Page-Id' => wiki_content.page.id
     @author = wiki_content.author
     message_id wiki_content
     @wiki_content = wiki_content
     @user = user
+    @recipients = recipients
     @wiki_content_url =
       url_for(:controller => 'wiki', :action => 'show',
               :project_id => wiki_content.project,
@@ -351,7 +357,7 @@ class Mailer < ActionMailer::Base
     users |= wiki_content.notified_mentions
 
     users.each do |user|
-      wiki_content_updated(user, wiki_content).deliver_later
+      wiki_content_updated(user, wiki_content, users).deliver_later
     end
   end
 
@@ -370,8 +376,9 @@ class Mailer < ActionMailer::Base
   end
 
   # Builds a mail to user about an account activation request.
-  def account_activation_request(user, new_user)
+  def account_activation_request(user, new_user, recipients=nil)
     @new_user = new_user
+    @recipients = recipients
     @url = url_for(:controller => 'users', :action => 'index',
                          :status => User::STATUS_REGISTERED,
                          :sort_key => 'created_on', :sort_order => 'desc')
@@ -388,7 +395,7 @@ class Mailer < ActionMailer::Base
     # Send the email to all active administrators
     users = User.active.where(:admin => true)
     users.each do |user|
-      account_activation_request(user, new_user).deliver_later
+      account_activation_request(user, new_user, users.to_a).deliver_later
     end
   end
 
@@ -472,7 +479,8 @@ class Mailer < ActionMailer::Base
   #     field: :field_mail,
   #     value: address
   #   ) => Mail::Message object
-  def security_notification(user, sender, options={})
+  def security_notification(user, sender, options={}, recipients=nil)
+    @recipients = recipients
     @sender = sender
     redmine_headers 'Sender' => sender.login
     @message =
@@ -509,12 +517,13 @@ class Mailer < ActionMailer::Base
     options[:remote_ip] ||= sender.remote_ip
 
     Array.wrap(users).each do |user|
-      security_notification(user, sender, options).deliver_later
+      security_notification(user, sender, options, users).deliver_later
     end
   end
 
   # Build a mail to user about application settings changes made by sender.
-  def settings_updated(user, sender, changes, options={})
+  def settings_updated(user, sender, changes, options={}, recipients=nil)
+    @recipients = recipients
     @sender = sender
     redmine_headers 'Sender' => sender.login
     @changes = changes
@@ -541,7 +550,7 @@ class Mailer < ActionMailer::Base
 
     users = User.active.where(admin: true).to_a
     users.each do |user|
-      settings_updated(user, sender, changes, options).deliver_later
+      settings_updated(user, sender, changes, options, users).deliver_later
     end
   end
 
