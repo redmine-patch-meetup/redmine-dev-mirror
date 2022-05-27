@@ -712,7 +712,7 @@ class IssueQuery < Query
   def sql_for_tracker_id_field(field, operator, value)
     if operator == "="
       # accepts a comma separated list of ids
-      ids = value.first.to_s.scan(/\d+/).map(&:to_i)
+      ids = value.join(",").scan(/\d+/).map(&:to_i)
       if ids.present?
         "tracker_id IN (#{ids.join(",")})"
       else
