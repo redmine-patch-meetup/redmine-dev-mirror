@@ -69,13 +69,13 @@ class AccountControllerTest < Redmine::ControllerTest
       with_settings :login_required => '0' do
         get :login
         assert_response :success
-        assert_select '#banner-text h1', text: /banner text/
+        assert_select '#top-banner h1', text: /banner text/
       end
 
       with_settings :login_required => '1' do
         get :login
         assert_response :success
-        assert_select '#banner-text', count: 0
+        assert_select '#top-banner', count: 0
       end
     end
   end
