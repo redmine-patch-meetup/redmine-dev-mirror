@@ -64,6 +64,23 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal 2, @request.session[:user_id]
   end
 
+  # required_loginがtrueの場合、loginページにバナーを表示しないこと
+  def test_login_should_not_view_banner_if_required_login
+    with_settings :banner_text => 'h1. banner text' do
+      with_settings :login_required => '0' do
+        get :login
+        assert_response :success
+        assert_select '#header #banner-text h1', text: /banner text/
+      end
+
+      with_settings :login_required => '1' do
+        get :login
+        assert_response :success
+        assert_select '#header #banner-text', count: 0
+      end
+    end
+  end
+
   def test_login_should_redirect_to_back_url_param
     # request.uri is "test.host" in test environment
     back_urls = [
@@ -246,7 +263,7 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_response 302
   end
 
-  def test_login_should_strip_whitespaces_from_user_name
+  def test_get_login_should_strip_whitespaces_from_user_name
     post(
       :login,
       :params => {
