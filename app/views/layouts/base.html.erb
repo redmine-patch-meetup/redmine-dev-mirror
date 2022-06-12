@@ -20,9 +20,10 @@
 </head>
 <body class="<%= body_css_classes %>">
 <%= call_hook :view_layouts_base_body_top %>
-<% if Setting.banner_text.present? && (!Setting.login_required? || User.current.logged?) %>
+<% parsed_banner_text = textilizable(Setting.banner_text) %>
+<% if parsed_banner_text.present? && (!Setting.login_required? || User.current.logged?) %>
     <div id="banner-text">
-        <%= textilizable Setting.banner_text %>
+        <%= parsed_banner_text %>
     </div>
 <% end %>
 <div id="wrapper">
@@ -73,6 +74,7 @@
 </div>
 
 <div id="header">
+
     <a href="#" class="mobile-toggle-button js-flyout-menu-toggle-button"></a>
 
     <% if User.current.logged? || !Setting.login_required? %>
