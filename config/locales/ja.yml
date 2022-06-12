@@ -346,6 +346,7 @@ ja:
 
   setting_app_title: アプリケーションのタイトル
   setting_welcome_text: ウェルカムメッセージ
+  setting_banner_text: バナーメッセージ
   setting_default_language: デフォルトの言語
   setting_login_required: 認証が必要
   setting_self_registration: ユーザーによるアカウント登録
