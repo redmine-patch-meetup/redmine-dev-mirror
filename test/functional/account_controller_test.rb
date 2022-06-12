@@ -64,19 +64,18 @@ class AccountControllerTest < Redmine::ControllerTest
     assert_equal 2, @request.session[:user_id]
   end
 
-  # required_loginがtrueの場合、loginページにバナーを表示しないこと
   def test_login_should_not_view_banner_if_required_login
     with_settings :banner_text => 'h1. banner text' do
       with_settings :login_required => '0' do
         get :login
         assert_response :success
-        assert_select '#header #banner-text h1', text: /banner text/
+        assert_select '#banner-text h1', text: /banner text/
       end
 
       with_settings :login_required => '1' do
         get :login
         assert_response :success
-        assert_select '#header #banner-text', count: 0
+        assert_select '#banner-text', count: 0
       end
     end
   end
