@@ -68,6 +68,11 @@
 </div>
 
 <div id="header">
+    <% if Setting.banner_text.present? %>
+        <div id="banner-text">
+            <%= textilizable Setting.banner_text %>
+        </div>
+    <% end %>
     <a href="#" class="mobile-toggle-button js-flyout-menu-toggle-button"></a>
 
     <% if User.current.logged? || !Setting.login_required? %>
@@ -107,11 +112,6 @@
     </div>
 
     <div id="content">
-        <% if Setting.banner_text.present? %>
-            <div id="banner-text">
-                <%= textilizable Setting.banner_text %>
-            </div>
-        <% end %>
         <%= render_flash_messages %>
         <%= yield %>
         <%= call_hook :view_layouts_base_content %>
