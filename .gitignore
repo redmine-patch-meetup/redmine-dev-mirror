@@ -47,3 +47,5 @@
 yarn-error.log
 
 docker-compose.yml
+
+/.vscode

@@ -1,0 +1,41 @@
+// Update the VARIANT arg in docker-compose.yml to pick a Ruby version
+{
+  "name": "Redmine dev mirror",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/var/lib/redmine",
+  "shutdownAction": "stopCompose",
+  "postStartCommand": "bash ./.devcontainer/scripts/postStartCommand.sh",
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "rebornix.ruby",
+        "eamodio.gitlens",
+        "kaiwood.endwise",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "ms-vsliveshare.vsliveshare"
+      ],
+      "settings": {
+        "workbench.colorCustomizations": {
+            "activityBar.background": "#ab3e3e"
+        },
+        "sqltools.connections": [
+            {
+                "previewLimit": 50,
+                "server": "postgresdb",
+                "port": 5432,
+                "driver": "PostgreSQL",
+                "name": "app_development",
+                "database": "app_development",
+                "username": "db_user",
+                "password": "password"
+            }
+        ]
+      }
+    }
+  }
+}
