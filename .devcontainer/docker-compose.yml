@@ -1,0 +1,63 @@
+version: '3'
+services:
+
+  # PostgreSQL
+  postgresdb:
+    image: postgres:11
+    restart: on-failure:5
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: db_user
+
+  # MySQL
+  # mysqldb:
+  #   image: mysql:5
+  #   restart: on-failure:5
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: password
+  #     MYSQL_PASSWORD: password
+  #     MYSQL_USER: db_user
+
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile-for-redmine-dev-mirror
+      args:
+        APP_HOME: /var/lib/redmine
+        APP_PORT: $APP_PORT
+    environment:
+      RAILS_DB_ADAPTER: postgresql
+      RAILS_DB_HOST: postgresdb
+      RAILS_DB: app
+      RAILS_DB_USERNAME: db_user
+      RAILS_DB_PASSWORD: password
+      RAILS_DB_ENCODING: utf8
+      RAILS_ENV: development
+    env_file: .env
+    tty: true
+    ports:
+      - $APP_PORT:3000
+    depends_on:
+      - postgresdb
+    #  - mysqldb
+    volumes:
+      - ../.:/var/lib/redmine:cached
+      # 全体を同期すると速度が遅くなるため、上の1行を消して下の4行のコメントアウトを外してもいい
+      # その場合、同期場所がgitの履歴とtmpディレクトリのみになるため、git commitしたもの + shareディレクトリに入れたファイル以外はコンテナのキャッシュが消えたときに消える
+      # - ../.git:/var/lib/redmine/.git
+      # - ../tmp:/var/lib/redmine/tmp
+      # - ../public:/var/lib/redmine/public
+      # - ../plugins:/var/lib/redmine/plugins
+
+  # For selenium test
+  # chrome:
+  #          M1の場合はselenium/standalone-chrome-debugが動かないため、seleniarm/standalone-chromium:latestを代わりに使うこと。
+  #   image: selenium/standalone-chrome-debug:3.141.59-20210913
+  #   ports:
+  #   - $SELENIUM_PORT_1:4444
+  #   - $SELENIUM_PORT_2:5900
+
+  smtp:
+    image: schickling/mailcatcher
+    ports:
+      - $MAILCATCHER_PORT:1080
