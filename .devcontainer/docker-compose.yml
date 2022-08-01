@@ -3,11 +3,13 @@ services:
 
   # PostgreSQL
   postgresdb:
-    image: postgres:11
+    image: postgres:14
     restart: on-failure:5
+    volumes:
+      - ./create-db-user.sql:/docker-entrypoint-initdb.d/create-db-user.sql
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: db_user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
   # MySQL
   # mysqldb:
@@ -23,14 +25,19 @@ services:
       context: ..
       dockerfile: Dockerfile-for-redmine-dev-mirror
       args:
-        APP_HOME: /var/lib/redmine
         APP_PORT: $APP_PORT
+        # Update 'VARIANT' to pick a version of Ruby: 3, 3.1, 3.0, 2, 2.7, 2.6
+        # Append -bullseye or -buster to pin to an OS version.
+        # Use -bullseye variants on local arm64/Apple Silicon.
+        VARIANT: "3.0-bullseye"
+        # Optional Node.js version to install
+        NODE_VERSION: "14"
     environment:
       RAILS_DB_ADAPTER: postgresql
       RAILS_DB_HOST: postgresdb
       RAILS_DB: app
-      RAILS_DB_USERNAME: db_user
-      RAILS_DB_PASSWORD: password
+      RAILS_DB_USERNAME: postgres
+      RAILS_DB_PASSWORD: postgres
       RAILS_DB_ENCODING: utf8
       RAILS_ENV: development
     env_file: .env
@@ -41,13 +48,13 @@ services:
       - postgresdb
     #  - mysqldb
     volumes:
-      - ../.:/var/lib/redmine:cached
+      - ..:/workspace:cached
       # 全体を同期すると速度が遅くなるため、上の1行を消して下の4行のコメントアウトを外してもいい
       # その場合、同期場所がgitの履歴とtmpディレクトリのみになるため、git commitしたもの + shareディレクトリに入れたファイル以外はコンテナのキャッシュが消えたときに消える
-      # - ../.git:/var/lib/redmine/.git
-      # - ../tmp:/var/lib/redmine/tmp
-      # - ../public:/var/lib/redmine/public
-      # - ../plugins:/var/lib/redmine/plugins
+      # - ../.git:/workspace/.git
+      # - ../tmp:/workspace/tmp
+      # - ../public:/workspace/public
+      # - ../plugins:/workspace/plugins
 
   # For selenium test
   # chrome:

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+/move_files.sh
 bundle install
 rake generate_secret_token
 
