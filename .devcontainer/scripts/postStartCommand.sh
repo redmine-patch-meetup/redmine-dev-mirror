@@ -1,12 +1,9 @@
 #!/bin/bash
 
-/move_files.sh
-bundle install
+bundle update
 rake generate_secret_token
 
-rake db:create
 rake db:migrate
 rake redmine:plugins:migrate
-rake log:clear
 
-exec "$@"
+rake log:clear

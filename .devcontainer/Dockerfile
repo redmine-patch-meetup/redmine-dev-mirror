@@ -14,18 +14,4 @@ RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSI
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends bzr gsfonts imagemagick libmagick++-dev
 
-WORKDIR /workspace
-ADD . /workspace
-
-COPY ./.devcontainer/scripts/. /
-RUN chmod +x /entrypoint.sh; \
-    chmod +x /move_files.sh; \
-    /move_files.sh; \
-    mkdir /logs; touch /logs/redmine.log; chown -R vscode /logs; \
-    bundle update; \
-    bundle install;
-
 EXPOSE $APP_PORT
-
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/bin/bash"]

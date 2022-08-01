@@ -23,7 +23,7 @@ services:
   app:
     build:
       context: ..
-      dockerfile: Dockerfile-for-redmine-dev-mirror
+      dockerfile: .devcontainer/Dockerfile
       args:
         APP_PORT: $APP_PORT
         # Update 'VARIANT' to pick a version of Ruby: 3, 3.1, 3.0, 2, 2.7, 2.6
@@ -47,6 +47,7 @@ services:
     depends_on:
       - postgresdb
     #  - mysqldb
+    command: sleep infinity
     volumes:
       - ..:/workspace:cached
       # 全体を同期すると速度が遅くなるため、上の1行を消して下の4行のコメントアウトを外してもいい
