@@ -111,7 +111,7 @@ http://localhost:[.envで指定したMAILCATCHER_PORT] でにアクセスする�
 
 #### 3. Ruby3.0系以外のバージョンで動作検証やテストをしたい
 
-Dockerfile-for-redmine-dev-mirrorファイルの ``FROM mcr.microsoft.com/vscode/devcontainers/ruby:3` の3部分を利用したいバージョンに書き換えて、VSCodeのコマンドパレットからRebuild and Reopen container
+.devcontainer/docker-compose.yml ファイルの `VARIANT: "3.0-bullseye"` の3.0-bulleseye 部分を利用したいバージョンに書き換えて、VSCodeのコマンドパレットからRebuild and Reopen container
 
 #### 4. test/systemのテストを実行する場合
 
