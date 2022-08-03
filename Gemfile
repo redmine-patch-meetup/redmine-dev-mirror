@@ -101,8 +101,8 @@ group :test do
   # For running system tests
   gem 'puma'
   gem 'capybara', '~> 3.36.0'
-  gem "selenium-webdriver", "~> 3.142.7"
-  gem 'webdrivers', '4.6.1', require: false
+  gem "selenium-webdriver", Gem.ruby_version < Gem::Version.new('2.7') ? "4.1.0" : "~> 4.3.0"
+  gem 'webdrivers', '~> 5.0.0', require: false
   # RuboCop
   gem 'rubocop', '~> 1.32.0'
   gem 'rubocop-performance', '~> 1.14.2'

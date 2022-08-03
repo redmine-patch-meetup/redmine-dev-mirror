@@ -442,8 +442,11 @@ class IssuesSystemTest < ApplicationSystemTestCase
     # wait for ajax response
     assert page.has_select?('issue_project_id', selected: 'OnlineStore')
 
-    submit_buttons = page.all('input[type=submit]')
-    assert_equal 2, submit_buttons.size
+    submit_buttons = []
+    finally do
+      submit_buttons = page.all('input[type=submit]')
+      assert_equal 2, submit_buttons.size
+    end
     assert_equal 'Move', submit_buttons[0].value
     assert_equal 'Move and follow', submit_buttons[1].value
 
@@ -506,8 +509,11 @@ class IssuesSystemTest < ApplicationSystemTestCase
     # wait for ajax response
     assert page.has_select?('issue_project_id', selected: 'OnlineStore')
 
-    submit_buttons = page.all('input[type=submit]')
-    assert_equal 2, submit_buttons.size
+    submit_buttons = []
+    finally do
+      submit_buttons = page.all('input[type=submit]')
+      assert_equal 2, submit_buttons.size
+    end
     assert_equal 'Copy', submit_buttons[0].value
     assert_equal 'Copy and follow', submit_buttons[1].value
     page.find('#issue_priority_id').select('High')

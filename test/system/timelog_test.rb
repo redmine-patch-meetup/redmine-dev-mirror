@@ -41,9 +41,11 @@ class TimelogTest < ApplicationSystemTestCase
     within 'form#new_time_entry' do
       select 'eCookbook', :from => 'Project'
     end
-    within 'select#time_entry_activity_id' do
-      assert has_content?('Development')
-      assert !has_content?('Design')
+    finally do
+      within 'select#time_entry_activity_id' do
+        assert has_content?('Development')
+        assert !has_content?('Design')
+      end
     end
   end
 
