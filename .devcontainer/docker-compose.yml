@@ -50,12 +50,6 @@ services:
     command: sleep infinity
     volumes:
       - ..:/workspace:cached
-      # 全体を同期すると速度が遅くなるため、上の1行を消して下の4行のコメントアウトを外してもいい
-      # その場合、同期場所がgitの履歴とtmpディレクトリのみになるため、git commitしたもの + shareディレクトリに入れたファイル以外はコンテナのキャッシュが消えたときに消える
-      # - ../.git:/workspace/.git
-      # - ../tmp:/workspace/tmp
-      # - ../public:/workspace/public
-      # - ../plugins:/workspace/plugins
 
   # For selenium test
   # chrome:
