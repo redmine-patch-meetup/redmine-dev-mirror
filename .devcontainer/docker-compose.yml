@@ -58,6 +58,7 @@ services:
   #   ports:
   #   - $SELENIUM_PORT_1:4444
   #   - $SELENIUM_PORT_2:5900
+  #   shm_size: 2gb
 
   smtp:
     image: schickling/mailcatcher
