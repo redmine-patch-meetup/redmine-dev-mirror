@@ -1,0 +1,10 @@
+# redmine-dev-mirror
+
+development:
+  email_delivery:
+    delivery_method: :smtp
+    smtp_settings:
+      address: 'smtp'
+      port: 1025
+test:
+production:
