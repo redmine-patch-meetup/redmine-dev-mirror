@@ -46,4 +46,6 @@
 /node_modules
 yarn-error.log
 
-docker-compose.yml
+/docker-compose.yml
+
+/.vscode
