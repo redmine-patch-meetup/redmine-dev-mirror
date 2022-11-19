@@ -143,7 +143,6 @@ class QueryTest < ActiveSupport::TestCase
 
   def find_issues_with_query(query)
     Issue.joins(:status, :tracker, :project, :priority).
-    # Issue.joins(:status, :tracker, :project, :priority, :custom_values).
       where(query.statement).to_a
   end
 
@@ -713,12 +712,11 @@ class QueryTest < ActiveSupport::TestCase
 
   def test_operator_does_not_contain_on_text_custom_field
     query = IssueQuery.new(:name => '_')
-    # query.add_filter('cf_2', '!~', ['125'])
-    query.add_filter('cf_2', '!*', [])
-    # query.filters = {"cf_2" => {:operator => '!*', :values => []}}
-    binding.pry
+    query.filters = {"cf_2" => {:operator => '!~', :values => ['125']}}
     result = find_issues_with_query(query)
-    assert_equal 10, result.size
+    # "cf_2" (Searchable field) custom field's available trackers are only 1:Bug and 3:Support request.
+    # 8(Issue.visible.where(tracker: [1,3])) - 2(contain "125") = 6(not contain "125")
+    assert_equal 6, result.size
   end
 
   def test_range_for_this_week_with_week_starting_on_monday
