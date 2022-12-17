@@ -1426,8 +1426,8 @@ class Query < ActiveRecord::Base
     when "~"
       sql = sql_contains("#{db_table}.#{db_field}", value.first)
     when "!~"
-      sql = "#{db_table}.#{db_field} IS NULL"
-      sql += " OR " + sql_contains("#{db_table}.#{db_field}", value.first, :match => false)
+      sql = sql_contains("#{db_table}.#{db_field}", value.first, :match => false)
+      sql += " OR #{db_table}.#{db_field} IS NULL" if is_custom_filter
     when "^"
       sql = sql_contains("#{db_table}.#{db_field}", value.first, :starts_with => true)
     when "$"
