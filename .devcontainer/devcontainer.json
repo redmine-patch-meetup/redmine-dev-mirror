@@ -16,6 +16,7 @@
         "kaiwood.endwise",
         "mtxr.sqltools",
         "mtxr.sqltools-driver-pg",
+        "mtxr.sqltools-driver-mysql",
         "ms-vsliveshare.vsliveshare"
       ],
       "settings": {
@@ -30,9 +31,19 @@
                 "driver": "PostgreSQL",
                 "name": "app_development",
                 "database": "app_development",
-                "username": "db_user",
-                "password": "password"
-            }
+                "username": "postgres",
+                "password": "postgres"
+            },
+            {
+              "previewLimit": 50,
+              "server": "mysqldb",
+              "port": 3306,
+              "driver": "MySQL",
+              "name": "app_development",
+              "database": "app_development",
+              "username": "root",
+              "password": "password"
+          },
         ]
       }
     }
