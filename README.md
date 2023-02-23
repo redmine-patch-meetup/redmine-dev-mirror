@@ -70,6 +70,9 @@ SELENIUM_PORT_2=5900
 MAILCATCHER_PORT=1080
 # mysqlやsqlite3に変えても良い。mysqlの場合、.devcontainer/docker-compose.ymlのMySQL関連のコメントアウトを外す
 RAILS_DB_ADAPTER=postgresql
+# postgres、mysqlのホスト側への公開ポート。ホスト側で既に使っている場合は変える
+POSTGRES_PORT=5433
+MYSQL_PORT=3307
 ```
 
 * VScodeに拡張機能[Remote-Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストール

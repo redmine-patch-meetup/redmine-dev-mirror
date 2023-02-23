@@ -10,15 +10,18 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    ports:
+      - $POSTGRES_PORT:5432
 
   # MySQL
   # mysqldb:
   #   image: mysql:5
+  #   platform: linux/amd64
   #   restart: on-failure:5
   #   environment:
   #     MYSQL_ROOT_PASSWORD: password
-  #     MYSQL_PASSWORD: password
-  #     MYSQL_USER: db_user
+  #   ports:
+  #     - $MYSQL_PORT:3306
 
   app:
     build:
@@ -33,6 +36,7 @@ services:
         # Optional Node.js version to install
         NODE_VERSION: "14"
     environment:
+      # PostgreSQL
       RAILS_DB_ADAPTER: postgresql
       RAILS_DB_HOST: postgresdb
       RAILS_DB: app
@@ -40,6 +44,14 @@ services:
       RAILS_DB_PASSWORD: postgres
       RAILS_DB_ENCODING: utf8
       RAILS_ENV: development
+      # # MySQL
+      # RAILS_DB_ADAPTER: mysql2
+      # RAILS_DB_HOST: mysqldb
+      # RAILS_DB: app
+      # RAILS_DB_USERNAME: root
+      # RAILS_DB_PASSWORD: password
+      # RAILS_DB_ENCODING: utf8mb4
+      # RAILS_ENV: development
     env_file: .env
     tty: true
     ports:
