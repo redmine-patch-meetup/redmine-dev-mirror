@@ -21,7 +21,7 @@
 <%= call_hook :view_layouts_base_body_top %>
 <% parsed_banner_text = textilizable(Setting.banner_text) %>
 <% if parsed_banner_text.present? && (!Setting.login_required? || User.current.logged?) %>
-    <div id="banner-text">
+    <div id="top-banner">
         <%= parsed_banner_text %>
     </div>
 <% end %>
