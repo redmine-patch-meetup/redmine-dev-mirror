@@ -1528,4 +1528,19 @@ class ProjectsControllerTest < Redmine::ControllerTest
       assert_select 'a[href=?]', '/projects/ecookbook/search?scope=subprojects'
     end
   end
+
+  def test_user_without_publish_project_permission_cannot_publish
+    project = Project.generate!(is_public: false)
+    user = User.generate!
+    User.add_to_project(user, project, Role.generate!(:permissions => [:edit_project])) # No Publish Project permission
+
+    @request.session[:user_id] = user.id
+    post(
+      :update,
+      params: {id: project.id, project: {is_public: true}}
+    )
+
+    assert_response 302
+    assert_equal project.reload.is_public?, false
+  end
 end
