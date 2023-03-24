@@ -1344,6 +1344,9 @@ div.wiki>.task-list {
 div.wiki .task-list {
   list-style-type: none;
 }
+div.wiki .task-list .task-list {
+  padding-left: 40px;
+}
 div.wiki .task-list input.task-list-item-checkbox {
   height: initial;
 }
