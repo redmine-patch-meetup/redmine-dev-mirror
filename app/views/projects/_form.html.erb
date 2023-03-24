@@ -11,8 +11,15 @@
 <% end %></p>
 <p><%= f.text_field :homepage, :size => 60 %></p>
 <p>
-  <%= f.check_box :is_public, disabled: !(@project.is_public? || User.current.allowed_to?(:publish_project, @project)) %>
-  <em class="info"><%= Setting.login_required? ? l(:text_project_is_public_non_member) : l(:text_project_is_public_anonymous) %></em>
+  <% if @project.safe_attribute? 'is_public' %>
+    <%= f.check_box :is_public, disabled: !(@project.is_public? || User.current.allowed_to?(:publish_project, @project)) %>
+    <em class="info"><%= Setting.login_required? ? l(:text_project_is_public_non_member) : l(:text_project_is_public_anonymous) %></em>
+  <% else %>
+    <%= f.label_for_field(:is_public) %>
+    <span id="project_is_public" style="padding-top: 3px; padding-left: 3px; display: inline-block">
+      <%= @project.is_public ? l(:general_text_Yes) : l(:general_text_No) %>
+    </span>
+  <% end %>
 </p>
 
 <% unless @project.allowed_parents.compact.empty? %>
