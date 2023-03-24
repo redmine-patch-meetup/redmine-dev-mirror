@@ -67,7 +67,7 @@
 </div>
 
 <div id="header">
-    <% if Setting.banner_text.present? %>
+    <% if Setting.banner_text.present? && (!Setting.login_required? || (controller_name != 'account' && action_name != 'login')) %>
         <div id="banner-text">
             <%= textilizable Setting.banner_text %>
         </div>
