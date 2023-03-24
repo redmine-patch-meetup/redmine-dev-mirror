@@ -2641,7 +2641,7 @@ class QueryTest < ActiveSupport::TestCase
     User.current.pref.update_attribute :time_zone, 'Hawaii'
 
     # assume timestamps are stored as utc
-    ActiveRecord::Base.default_timezone = :utc
+    ActiveRecord.default_timezone = :utc
 
     from = Date.parse '2016-03-20'
     to = Date.parse '2016-03-22'
@@ -2652,7 +2652,7 @@ class QueryTest < ActiveSupport::TestCase
     t = Time.new(2016, 3, 23, 9, 59, 59, 0).end_of_hour
     assert_equal "table.field > '#{Query.connection.quoted_date f}' AND table.field <= '#{Query.connection.quoted_date t}'", c
   ensure
-    ActiveRecord::Base.default_timezone = :local # restore Redmine default
+    ActiveRecord.default_timezone = :local # restore Redmine default
   end
 
   def test_project_statement_with_closed_subprojects

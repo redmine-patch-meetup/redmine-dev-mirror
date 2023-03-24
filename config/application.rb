@@ -27,6 +27,9 @@ module RedmineApp
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
+    config.active_record.legacy_connection_handling = false
+    config.active_support.remove_deprecated_time_with_zone_name = true
+
     config.active_record.store_full_sti_class = true
     config.active_record.default_timezone = :local
     config.active_record.yaml_column_permitted_classes = [
