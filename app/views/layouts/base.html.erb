@@ -19,6 +19,11 @@
 </head>
 <body class="<%= body_css_classes %>">
 <%= call_hook :view_layouts_base_body_top %>
+<% if Setting.banner_text.present? %>
+    <div id="banner-text">
+        <%= textilizable Setting.banner_text %>
+    </div>
+<% end %>
 <div id="wrapper">
 
 <div class="flyout-menu js-flyout-menu">
@@ -67,11 +72,6 @@
 </div>
 
 <div id="header">
-    <% if Setting.banner_text.present? && (!Setting.login_required? || (controller_name != 'account' && action_name != 'login')) %>
-        <div id="banner-text">
-            <%= textilizable Setting.banner_text %>
-        </div>
-    <% end %>
     <a href="#" class="mobile-toggle-button js-flyout-menu-toggle-button"></a>
 
     <% if User.current.logged? || !Setting.login_required? %>
