@@ -1543,4 +1543,18 @@ class ProjectsControllerTest < Redmine::ControllerTest
     assert_response 302
     assert_equal project.reload.is_public?, false
   end
+
+  def test_without_publish_project_permission_publish_checkbox_is_disabled
+    project = Project.generate!(is_public: false)
+    user = User.generate!
+    User.add_to_project(user, project, Role.generate!(:permissions => [:edit_project])) # No Publish Project permission
+
+    @request.session[:user_id] = user.id
+    get(
+      :settings,
+      params: {id: project.id}
+    )
+
+    assert_select 'input#project_is_public[disabled]'
+  end
 end
