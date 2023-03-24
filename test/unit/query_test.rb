@@ -143,6 +143,7 @@ class QueryTest < ActiveSupport::TestCase
 
   def find_issues_with_query(query)
     Issue.joins(:status, :tracker, :project, :priority).
+    # Issue.joins(:status, :tracker, :project, :priority, :custom_values).
       where(query.statement).to_a
   end
 
@@ -708,6 +709,16 @@ class QueryTest < ActiveSupport::TestCase
     query.add_filter('subject', '!~', ['cdeF'])
     result = find_issues_with_query(query)
     assert_not_include issue, result
+  end
+
+  def test_operator_does_not_contain_on_text_custom_field
+    query = IssueQuery.new(:name => '_')
+    # query.add_filter('cf_2', '!~', ['125'])
+    query.add_filter('cf_2', '!*', [])
+    # query.filters = {"cf_2" => {:operator => '!*', :values => []}}
+    binding.pry
+    result = find_issues_with_query(query)
+    assert_equal 10, result.size
   end
 
   def test_range_for_this_week_with_week_starting_on_monday
