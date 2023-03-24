@@ -443,8 +443,12 @@ class IssuesSystemTest < ApplicationSystemTestCase
     # wait for ajax response
     assert page.has_select?('issue_project_id', selected: 'OnlineStore')
 
-    submit_buttons = page.all('input[type=submit]')
-    assert_equal 2, submit_buttons.size
+    wait = Selenium::WebDriver::Wait.new()
+    submit_buttons = []
+    wait.until do
+      submit_buttons = page.all('input[type=submit]')
+      submit_buttons.size == 2
+    end
     assert_equal 'Move', submit_buttons[0].value
     assert_equal 'Move and follow', submit_buttons[1].value
 
@@ -507,7 +511,12 @@ class IssuesSystemTest < ApplicationSystemTestCase
     # wait for ajax response
     assert page.has_select?('issue_project_id', selected: 'OnlineStore')
 
-    submit_buttons = page.all('input[type=submit]')
+    wait = Selenium::WebDriver::Wait.new()
+    submit_buttons = []
+    wait.until do
+      submit_buttons = page.all('input[type=submit]')
+      submit_buttons.size == 2
+    end
     assert_equal 2, submit_buttons.size
     assert_equal 'Copy', submit_buttons[0].value
     assert_equal 'Copy and follow', submit_buttons[1].value
