@@ -713,6 +713,20 @@ class IssueQuery < Query
     end
   end
 
+  def sql_for_tracker_id_field(field, operator, value)
+    if operator == "="
+      # accepts a comma separated list of ids
+      ids = value.first.to_s.scan(/\d+/).map(&:to_i)
+      if ids.present?
+        "tracker_id IN (#{ids.join(",")})"
+      else
+        "1=0"
+      end
+    else
+      sql_for_field("tracker_id", operator, value, Issue.table_name, "tracker_id")
+    end
+  end
+
   def sql_for_relations(field, operator, value, options={})
     relation_options = IssueRelation::TYPES[field]
     return relation_options unless relation_options

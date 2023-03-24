@@ -769,6 +769,20 @@ class QueryTest < ActiveSupport::TestCase
                  query.statement
   end
 
+  def test_filter_on_tracker_id
+    query =
+      IssueQuery.new(
+        :name => '_',
+        :filters => {
+          'tracker_id' => {
+            :operator => '=',
+            :values => ['1,2,3']
+          }
+        }
+      )
+    assert_equal 14, find_issues_with_query(query).size
+  end
+
   def test_filter_assigned_to_me
     user = User.find(2)
     group = Group.find(10)
@@ -1052,6 +1066,24 @@ class QueryTest < ActiveSupport::TestCase
 
     bookmarks = User.current.bookmarked_project_ids
     assert_equal Project.where(parent_id: bookmarks).ids, result.map(&:id).sort
+  end
+
+  def test_filter_watched_issues
+    User.current = User.find(1)
+    query =
+      IssueQuery.new(
+        :name => '_',
+        :filters => {
+          'watcher_id' => {
+            :operator => '=',
+            :values => ['me']
+          }
+        }
+      )
+    result = find_issues_with_query(query)
+    assert_not_nil result
+    assert !result.empty?
+    assert_equal Issue.visible.watched_by(User.current).sort_by(&:id), result.sort_by(&:id)
   end
 
   def test_filter_watched_issues
