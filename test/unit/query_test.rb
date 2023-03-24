@@ -770,16 +770,18 @@ class QueryTest < ActiveSupport::TestCase
   end
 
   def test_filter_on_tracker_id
-    query =
-      IssueQuery.new(
-        :name => '_',
-        :filters => {
-          'tracker_id' => {
-            :operator => '=',
-            :values => ['1,2,3']
-          }
-        }
-      )
+    query = IssueQuery.new(:name => '_')
+
+    query.filters = {'tracker_id' => {:operator => '=', :values => ['1']}}
+    assert_equal 13, find_issues_with_query(query).size
+
+    query.filters = {'tracker_id' => {:operator => '=', :values => ['2']}}
+    assert_equal 1, find_issues_with_query(query).size
+
+    query.filters = {'tracker_id' => {:operator => '=', :values => ['3']}}
+    assert_equal 0, find_issues_with_query(query).size
+
+    query.filters = {'tracker_id' => {:operator => '=', :values => ['1,2,3']}}
     assert_equal 14, find_issues_with_query(query).size
   end
 
