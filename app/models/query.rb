@@ -1429,8 +1429,6 @@ class Query < ActiveRecord::Base
     when "~"
       sql = sql_contains("#{db_table}.#{db_field}", value.first)
     when "!~"
-      # binding.pry
-      # sql = sql_contains("#{db_table}.#{db_field}", value.first, :match => false)
       sql = "#{db_table}.#{db_field} IS NULL"
       sql += " OR " + sql_contains("#{db_table}.#{db_field}", value.first, :match => false)
     when "^"
