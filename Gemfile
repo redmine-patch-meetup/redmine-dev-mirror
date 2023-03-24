@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
-ruby '>= 2.6.0', '< 3.2.0'
+ruby '>= 2.7.0', '< 3.2.0'
 gem 'bundler', '>= 1.12.0'
 
-gem 'rails', '6.1.7'
+gem 'rails', '7.0.3.1'
 gem 'rouge', '~> 3.30.0'
 gem 'request_store', '~> 1.5.0'
 gem 'mini_mime', '~> 1.1.0'
-gem "actionpack-xml_parser"
+gem "actionpack-xml_parser", '2.0.1'
 gem 'roadie-rails', '~> 3.0.0'
 gem 'marcel'
 gem "mail", "~> 2.7.1"
@@ -104,8 +104,8 @@ group :test do
   # TODO: Remove version specification once Capybara supports Puma 6
   gem 'puma', '< 6.0.0'
   gem 'capybara', '~> 3.36.0'
-  gem "selenium-webdriver", "~> 3.142.7"
-  gem 'webdrivers', '4.6.1', require: false
+  gem "selenium-webdriver", "~> 4.4.0"
+  gem 'webdrivers', '5.0.0', require: false
   # RuboCop
   gem 'rubocop', '~> 1.41.1'
   gem 'rubocop-performance', '~> 1.15.0'

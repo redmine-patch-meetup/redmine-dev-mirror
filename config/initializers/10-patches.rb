@@ -47,20 +47,6 @@ module ActionView
       end
     end
   end
-
-  class Resolver
-    def find_all(name, prefix=nil, partial=false, details={}, key=nil, locals=[])
-      locals = locals.map(&:to_s).sort!.freeze
-
-      cached(key, [name, prefix, partial], details, locals) do
-        if (details[:formats] & [:xml, :json]).any?
-          details = details.dup
-          details[:formats] = details[:formats].dup + [:api]
-        end
-        _find_all(name, prefix, partial, details, key, locals)
-      end
-    end
-  end
 end
 
 ActionView::Base.field_error_proc = Proc.new{ |html_tag, instance| html_tag || ''.html_safe }
@@ -141,6 +127,35 @@ module ActionController
         "Setting the session secret with ActionController.session= is no longer supported."
       exit 1
     end
+  end
+end
+
+module ActionView
+  LookupContext.prepend(Module.new do
+    def formats=(values)
+      if (Array(values) & [:xml, :json]).any?
+        values << :api
+      end
+      super values
+    end
+  end)
+
+  Rendering.prepend(Module.new do
+    def rendered_format
+      if lookup_context.formats.first == :api
+        return request.format
+      end
+
+      super
+    end
+  end)
+
+  class Template
+    Types.singleton_class.prepend(Module.new do
+      def symbols
+        super + [:api]
+      end
+    end)
   end
 end
 

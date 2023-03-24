@@ -34,7 +34,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   options = {}
   # Allow running tests using a remote Selenium hub
   options[:url] = ENV['SELENIUM_REMOTE_URL'] if ENV['SELENIUM_REMOTE_URL']
-  options[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.chrome(
+  options[:capabilities] = Selenium::WebDriver::Remote::Capabilities.chrome(
                   'goog:chromeOptions' => {
                     'args' => GOOGLE_CHROME_OPTS_ARGS,
                     'prefs' => {
