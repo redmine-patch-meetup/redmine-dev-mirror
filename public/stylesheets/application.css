@@ -1153,6 +1153,16 @@ img.ui-datepicker-trigger {
   margin-bottom: 15px;
 }
 
+/***** Banner *****/
+
+div#banner-text {
+  padding: 0px 20px;
+  margin-bottom: 2px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  padding-left: 12px;
+}
+
 /***** Progress bar *****/
 table.progress {
   border-collapse: collapse;
