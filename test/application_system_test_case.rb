@@ -18,7 +18,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 require File.expand_path('../test_helper', __FILE__)
-require 'webdrivers/chromedriver'
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   DOWNLOADS_PATH = File.expand_path(File.join(Rails.root, 'tmp', 'downloads'))
@@ -32,9 +31,15 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   GOOGLE_CHROME_OPTS_ARGS = ENV['GOOGLE_CHROME_OPTS_ARGS'].split(",") if ENV['GOOGLE_CHROME_OPTS_ARGS']
 
   options = {}
+  if ENV['SELENIUM_REMOTE_URL']
+    options[:url] = ENV['SELENIUM_REMOTE_URL']
+    options[:browser] = :remote
+  else
+    require 'webdrivers/chromedriver'
+  end
+
   # Allow running tests using a remote Selenium hub
-  options[:url] = ENV['SELENIUM_REMOTE_URL'] if ENV['SELENIUM_REMOTE_URL']
-  options[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.chrome(
+  options[:capabilities] = Selenium::WebDriver::Remote::Capabilities.chrome(
                   'goog:chromeOptions' => {
                     'args' => GOOGLE_CHROME_OPTS_ARGS,
                     'prefs' => {
@@ -51,6 +56,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   )
 
   setup do
+    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
     # Allow defining a custom app host (useful when using a remote Selenium hub)
     if ENV['CAPYBARA_APP_HOST']
       Capybara.configure do |config|
@@ -86,6 +92,16 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       loop until page.evaluate_script("jQuery.active").zero?
     end
   end
+
+  def finally(timeout = Capybara.default_max_wait_time, start = Time.now)
+    yield
+    return
+  rescue Minitest::Assertion, Capybara::ElementNotFound
+    raise if Time.now > start + timeout
+    sleep 0.1
+    retry
+  end
+
 
   def clear_downloaded_files
     FileUtils.rm downloaded_files
