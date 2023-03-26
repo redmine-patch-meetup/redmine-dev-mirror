@@ -1523,7 +1523,11 @@ td.gantt_selected_column .gantt_hdr,.gantt_selected_column_container {
 .badge-issues-count {
   background: #EEEEEE;
 }
-
+.badge-gem {
+  color: #E9573F;
+  border: 1px solid #E9573F;
+  margin-left: 0.5rem;
+}
 /***** Tooltips *****/
 .ui-tooltip {
   background: #000;
