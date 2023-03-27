@@ -1,0 +1,29 @@
+Description:
+    The plugin generator creates stubs for a new Redmine plugin.
+
+Example:
+    bundle exec rails generate redmine_plugin_gem meetings
+      create  gems/meetings/app
+      create  gems/meetings/app/controllers
+      create  gems/meetings/app/helpers
+      create  gems/meetings/app/models
+      create  gems/meetings/app/views
+      create  gems/meetings/db/migrate
+      create  gems/meetings/lib/tasks
+      create  gems/meetings/assets/images
+      create  gems/meetings/assets/javascripts
+      create  gems/meetings/assets/stylesheets
+      create  gems/meetings/config/locales
+      create  gems/meetings/test
+      create  gems/meetings/test/fixtures
+      create  gems/meetings/test/unit
+      create  gems/meetings/test/functional
+      create  gems/meetings/test/integration
+      create  gems/meetings/Gemfile
+      create  gems/meetings/Rakefile
+      create  gems/meetings/README.rdoc
+      create  gems/meetings/init.rb
+      create  gems/meetings/meetings.gemspec
+      create  gems/meetings/config/routes.rb
+      create  gems/meetings/config/locales/en.yml
+      create  gems/meetings/test/test_helper.rb
