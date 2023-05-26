@@ -377,7 +377,6 @@ fi:
   label_help: Ohjeet
   label_reported_issues: Raportoidut tapahtumat
   label_assigned_to_me_issues: Minulle nimetyt tapahtumat
-  label_last_login: Viimeinen yhteys
   label_registered_on: Rekisteröity
   label_activity: Historia
   label_new: Uusi
@@ -1498,3 +1497,8 @@ fi:
   label_auto_watch_on_issue_created: Issues I created
   field_any_searchable: Any searchable text
   label_contains_any_of: contains any of
+  button_apply_issues_filter: Apply issues filter
+  label_view_previous_annotation: View annotation prior to this change
+  label_has_been: has been
+  label_has_never_been: has never been
+  label_changed_from: changed from

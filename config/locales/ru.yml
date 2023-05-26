@@ -546,7 +546,6 @@ ru:
   label_jump_to_a_project: Перейти к проекту...
   label_language_based: На основе языка
   label_last_changes: "менее %{count} изменений"
-  label_last_login: Последнее подключение
   label_last_month: прошлый месяц
   label_last_n_days: "последние %{count} дней"
   label_last_week: прошлая неделя
@@ -1551,3 +1550,8 @@ ru:
   label_auto_watch_on_issue_created: Issues I created
   field_any_searchable: Any searchable text
   label_contains_any_of: contains any of
+  button_apply_issues_filter: Apply issues filter
+  label_view_previous_annotation: View annotation prior to this change
+  label_has_been: has been
+  label_has_never_been: has never been
+  label_changed_from: changed from

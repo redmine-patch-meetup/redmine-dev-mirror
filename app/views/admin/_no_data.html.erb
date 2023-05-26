@@ -2,7 +2,8 @@
 <%= form_tag({:action => 'default_configuration'}) do %>
     <%= simple_format(l(:text_no_configuration_data)) %>
     <p><%= l(:field_language) %>:
-    <%= select_tag 'lang', options_for_select(lang_options_for_select(false), current_language.to_s) %>
+    <%= select_tag 'lang', options_for_select(lang_options_for_select(false), current_language.to_s) %><br/>
+    <label class="inline"><%= check_box_tag :default_projects_public, 'public', true %> <%= l(:setting_default_projects_public) %></label><br/>
     <%= submit_tag l(:text_load_default_configuration) %></p>
 <% end %>
 </div>

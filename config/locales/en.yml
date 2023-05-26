@@ -322,7 +322,7 @@ en:
   field_login: Login
   field_mail_notification: Email notifications
   field_admin: Administrator
-  field_last_login_on: Last connection
+  field_last_login_on: Last sign in
   field_passwd_changed_on: Password last changed
   field_language: Language
   field_effective_date: Due date
@@ -675,7 +675,6 @@ en:
   label_assigned_issues: Assigned issues
   label_assigned_to_me_issues: Issues assigned to me
   label_updated_issues: Updated issues
-  label_last_login: Last connection
   label_registered_on: Registered on
   label_activity: Activity
   label_user_activity: "%{value}'s activity"
@@ -819,6 +818,9 @@ en:
   label_no_issues_in_project: no issues in project
   label_any_open_issues: any open issues
   label_no_open_issues: no open issues
+  label_has_been: has been
+  label_has_never_been: has never been
+  label_changed_from: changed from
   label_day_plural: days
   label_repository: Repository
   label_repository_new: New repository
@@ -839,6 +841,7 @@ en:
   label_latest_revision_plural: Latest revisions
   label_view_revisions: View revisions
   label_view_all_revisions: View all revisions
+  label_view_previous_annotation: View annotation prior to this change
   label_x_revisions: "%{count} revisions"
   label_max_size: Maximum size
   label_roadmap: Roadmap
@@ -1199,6 +1202,7 @@ en:
   button_edit_object: "Edit %{object_name}"
   button_delete_object: "Delete %{object_name}"
   button_create_and_follow: Create and follow
+  button_apply_issues_filter: Apply issues filter
 
   status_active: active
   status_registered: registered

@@ -22,8 +22,11 @@ namespace :redmine do
       puts "===================================="
     end
 
+    options = {}
+    options[:default_projects_public] = ENV['REDMINE_DEFAULT_PROJECTS_PUBLIC'].presence
+  
     begin
-      Redmine::DefaultData::Loader.load(current_language)
+      Redmine::DefaultData::Loader.load(current_language, options)
       puts "Default configuration data loaded."
     rescue Redmine::DefaultData::DataAlreadyLoaded => error
       puts error.message

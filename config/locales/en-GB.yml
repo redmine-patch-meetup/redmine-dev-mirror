@@ -265,7 +265,7 @@ en-GB:
   field_login: Login
   field_mail_notification: Email notifications
   field_admin: Administrator
-  field_last_login_on: Last connection
+  field_last_login_on: Last sign in
   field_language: Language
   field_effective_date: Due date
   field_password: Password
@@ -502,7 +502,6 @@ en-GB:
   label_help: Help
   label_reported_issues: Reported issues
   label_assigned_to_me_issues: Issues assigned to me
-  label_last_login: Last connection
   label_registered_on: Registered on
   label_activity: Activity
   label_user_activity: "%{value}'s activity"
@@ -1478,3 +1477,8 @@ en-GB:
   label_auto_watch_on_issue_created: Issues I created
   field_any_searchable: Any searchable text
   label_contains_any_of: contains any of
+  button_apply_issues_filter: Apply issues filter
+  label_view_previous_annotation: View annotation prior to this change
+  label_has_been: has been
+  label_has_never_been: has never been
+  label_changed_from: changed from

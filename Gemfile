@@ -11,7 +11,7 @@ gem 'roadie-rails', '~> 3.0.0'
 gem 'marcel'
 gem 'mail', '~> 2.8.1'
 gem 'nokogiri', '~> 1.14.0'
-gem 'i18n', '~> 1.12.0'
+gem 'i18n', '~> 1.13.0'
 gem 'rbpdf', '~> 1.21.1'
 gem 'addressable'
 gem 'rubyzip', '~> 2.3.0'
@@ -107,7 +107,7 @@ group :test do
   gem "selenium-webdriver", "~> 3.142.7"
   gem 'webdrivers', '4.6.1', require: false
   # RuboCop
-  gem 'rubocop', '~> 1.50.0', require: false
+  gem 'rubocop', '~> 1.51.0', require: false
   gem 'rubocop-performance', '~> 1.17.1', require: false
   gem 'rubocop-rails', '~> 2.19.1', require: false
 end
