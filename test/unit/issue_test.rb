@@ -2921,6 +2921,59 @@ class IssueTest < ActiveSupport::TestCase
     end
   end
 
+  # done_ratio should change to 100 when the status is closed and Setting.issue_done_ratio equal issue_field_and_closed_status
+  test "when updating to closed status should update done_ratio according to Setting.issue_done_ratio" do
+    closed_status = IssueStatus.find(5)
+    closed_status.update!(:default_done_ratio => 90)
+
+    with_settings :issue_done_ratio => 'issue_field' do
+      issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
+      issue.update!(:status => closed_status)
+
+      assert_equal 30, issue.done_ratio
+      assert_equal 30, issue.read_attribute(:done_ratio)
+    end
+
+    with_settings :issue_done_ratio => 'issue_status' do
+      issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
+      issue.update!(:status => closed_status)
+
+      assert_equal 90, issue.done_ratio
+      assert_equal 90, issue.read_attribute(:done_ratio)
+    end
+
+    with_settings :issue_done_ratio => 'issue_field_and_closed_status' do
+      issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
+      issue.update!(:status => closed_status)
+
+      assert_equal 100, issue.done_ratio
+      assert_equal 100, issue.read_attribute(:done_ratio)
+    end
+  end
+
+  test "done ratio of existing issues follows the new issue_done_ratio setting" do
+    closed_status = IssueStatus.find(5)
+    closed_status.update!(:default_done_ratio => 90)
+
+    issue = Issue.generate!(:status_id => 1, :done_ratio => 30)
+    issue.update!(:status => closed_status)
+
+    with_settings :issue_done_ratio => 'issue_status' do
+      assert_equal 90, issue.done_ratio
+      assert_equal 30, issue.read_attribute(:done_ratio)
+    end
+
+    with_settings :issue_done_ratio => 'issue_field_and_closed_status' do
+      assert_equal 100, issue.done_ratio
+      assert_equal 30, issue.read_attribute(:done_ratio)
+    end
+
+    with_settings :issue_done_ratio => 'issue_field' do
+      assert_equal 30, issue.done_ratio
+      assert_equal 30, issue.read_attribute(:done_ratio)
+    end
+  end
+
   test "#by_tracker" do
     User.current = User.find(2)
     groups = Issue.by_tracker(Project.find(1))

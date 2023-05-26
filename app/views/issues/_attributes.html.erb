@@ -84,7 +84,7 @@
 <p><%= f.hours_field :estimated_hours, :size => 3, :required => @issue.required_attribute?('estimated_hours') %> <%= l(:field_hours) %></p>
 <% end %>
 
-<% if @issue.safe_attribute?('done_ratio') && Issue.use_field_for_done_ratio? %>
+<% if @issue.safe_attribute?('done_ratio') && Issue.done_ratio_editable? %>
 <p><%= f.select :done_ratio, ((0..10).to_a.collect {|r| ["#{r*10} %", r*10] }), :required => @issue.required_attribute?('done_ratio') %></p>
 <% end %>
 </div>
