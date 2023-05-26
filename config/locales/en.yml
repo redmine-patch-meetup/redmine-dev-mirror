@@ -1176,6 +1176,7 @@ en:
   button_unarchive: Unarchive
   button_reset: Reset
   button_rename: Rename
+  button_delete_redirect: "Delete redirect from %{page_title}"
   button_change_password: Change password
   button_copy: Copy
   button_copy_and_follow: Copy and follow

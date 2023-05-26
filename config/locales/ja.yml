@@ -852,6 +852,7 @@ ja:
   button_unarchive: アーカイブ解除
   button_reset: リセット
   button_rename: 名前変更
+  button_delete_redirect: "%{page_title}からのリダイレクトを削除"
   button_change_password: パスワード変更
   button_copy: コピー
   button_copy_and_follow: コピー後表示
