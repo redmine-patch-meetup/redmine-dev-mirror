@@ -447,7 +447,6 @@ el:
   label_help: Βοήθεια
   label_reported_issues: Εισηγμένα θέματα
   label_assigned_to_me_issues: Θέματα που έχουν ανατεθεί σε μένα
-  label_last_login: Τελευταία σύνδεση
   label_registered_on: Εγγράφηκε την
   label_activity: Δραστηριότητα
   label_user_activity: "δραστηριότητα του %{value}"
@@ -1477,3 +1476,8 @@ el:
   label_auto_watch_on_issue_created: Issues I created
   field_any_searchable: Any searchable text
   label_contains_any_of: contains any of
+  button_apply_issues_filter: Apply issues filter
+  label_view_previous_annotation: View annotation prior to this change
+  label_has_been: has been
+  label_has_never_been: has never been
+  label_changed_from: changed from

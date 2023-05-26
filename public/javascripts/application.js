@@ -27,6 +27,20 @@ function showAndScrollTo(id, focus) {
   $('html, body').animate({scrollTop: $('#'+id).offset().top}, 100);
 }
 
+function showAndScrollToEditIssue() {
+  $('#update h3').show();
+  $('#attributes').show(); $('#attributes input, #attributes select').prop('disabled', false)
+  $('#log_time').show(); $('#log_time input, #log_time select').prop('disabled', false)
+  showAndScrollTo('update', 'issue_notes');
+}
+
+function showAndScrollToAddNotes() {
+  $('#update h3').hide();
+  $('#attributes').hide();$('#attributes input, #attributes select').prop('disabled', true)
+  $('#log_time').hide();$('#log_time input, #log_time select').prop('disabled', true)
+  showAndScrollTo('update', 'issue_notes');
+}
+
 function toggleRowGroup(el) {
   var tr = $(el).parents('tr').first();
   var n = tr.next();
@@ -180,7 +194,9 @@ function buildFilterRow(field, operator, values) {
 
   switch (filterOptions['type']) {
   case "list":
+  case "list_with_history":
   case "list_optional":
+  case "list_optional_with_history":
   case "list_status":
   case "list_subprojects":
     tr.find('td.values').append(

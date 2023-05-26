@@ -797,6 +797,73 @@ class QueryTest < ActiveSupport::TestCase
     assert_equal [2, 14], result.map(&:id).sort
   end
 
+  def test_operator_changed_from
+    User.current = User.find(1)
+    issue1 = Issue.find(2)
+    issue1.init_journal(User.current)
+    issue1.update(status_id: 1)  # Assigned (2) -> New
+    issue2 = Issue.find(8)
+    issue2.init_journal(User.current)
+    issue2.update(status_id: 2)  # Closed (5) -> Assigned
+
+    query = IssueQuery.new(
+      :name => '_',
+      :filters => {
+        'status_id' => {
+          :operator => 'cf',
+          :values => [2, 5]  # Assigned, Closed
+        }
+      }
+    )
+    result = find_issues_with_query(query)
+    assert_equal(
+      [[2, 'New'], [8, 'Assigned']],
+      result.sort_by(&:id).map {|issue| [issue.id, issue.status.name]}
+    )
+  end
+
+  def test_operator_has_been
+    User.current = User.find(1)
+    issue = Issue.find(8)
+    issue.init_journal(User.current)
+    issue.update(status_id: 2)  # Closed (5) -> Assigned
+
+    query = IssueQuery.new(
+      :name => '_',
+      :filters => {
+        'status_id' => {
+          :operator => 'ev',
+          :values => [5]  # Closed
+        }
+      }
+    )
+    result = find_issues_with_query(query)
+    assert_equal(
+      [[8, 'Assigned'], [11, 'Closed'], [12, 'Closed']],
+      result.sort_by(&:id).map {|issue| [issue.id, issue.status.name]}
+    )
+  end
+
+  def test_operator_has_never_been
+    User.current = User.find(1)
+    issue = Issue.find(8)
+    issue.init_journal(User.current)
+    issue.update(status_id: 2)  # Closed (5) -> Assigned
+
+    query = IssueQuery.new(
+      :name => '_',
+      :filters => {
+        'status_id' => {
+          :operator => '!ev',
+          :values => [5]  # Closed
+        }
+      }
+    )
+    result = find_issues_with_query(query)
+    expected = Issue.all.order(:id).ids - [8, 11, 12]
+    assert_equal expected, result.map(&:id).sort
+  end
+
   def test_range_for_this_week_with_week_starting_on_monday
     I18n.locale = :fr
     assert_equal '1', I18n.t(:general_first_day_of_week)
@@ -1069,6 +1136,21 @@ class QueryTest < ActiveSupport::TestCase
     result = find_issues_with_query(query)
     assert_equal [6, 7, 8, 9, 10, 11, 12], result.map(&:id).sort
     result.each {|issue| assert_includes [1, 5], issue.project_id}
+  end
+
+  def test_filter_any_searchable_with_open_issues_should_search_only_open_issues
+    User.current = User.find(1)
+    query = IssueQuery.new(
+      :name => '_',
+      :filters => {
+        'status_id' => {:operator => 'o'}
+      }
+    )
+
+    result = query.sql_for_any_searchable_field(nil, '~', ['issue'])
+    assert_match /issues.id  IN \([\d,]+\)/, result
+    ids = result.scan(/\d+/).map(&:to_i).sort
+    assert_equal [4, 5, 6, 7, 9, 10, 13, 14], ids
   end
 
   def test_filter_updated_by

@@ -496,7 +496,6 @@ zh:
   label_help: 帮助
   label_reported_issues: 已报告的问题
   label_assigned_to_me_issues: 指派给我的问题
-  label_last_login: 最后登录
   label_registered_on: 注册于
   label_activity: 活动
   label_user_activity: "%{value} 的活动"
@@ -1432,3 +1431,8 @@ zh:
   label_auto_watch_on_issue_created: Issues I created
   field_any_searchable: Any searchable text
   label_contains_any_of: contains any of
+  button_apply_issues_filter: Apply issues filter
+  label_view_previous_annotation: View annotation prior to this change
+  label_has_been: has been
+  label_has_never_been: has never been
+  label_changed_from: changed from

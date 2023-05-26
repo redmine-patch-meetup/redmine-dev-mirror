@@ -453,7 +453,6 @@ id:
   label_help: Bantuan
   label_reported_issues: Masalah terlapor
   label_assigned_to_me_issues: Masalah yang ditugaskan pada saya
-  label_last_login: Terakhir login
   label_registered_on: Terdaftar pada
   label_activity: Kegiatan
   label_user_activity: "kegiatan %{value}"
@@ -1479,3 +1478,8 @@ id:
   label_auto_watch_on_issue_created: Issues I created
   field_any_searchable: Any searchable text
   label_contains_any_of: contains any of
+  button_apply_issues_filter: Apply issues filter
+  label_view_previous_annotation: View annotation prior to this change
+  label_has_been: has been
+  label_has_never_been: has never been
+  label_changed_from: changed from
