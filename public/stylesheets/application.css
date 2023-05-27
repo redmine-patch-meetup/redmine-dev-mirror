@@ -766,6 +766,80 @@ ul.properties li span {font-style:italic;}
 
 #workflow_copy_form select { width: 200px; }
 table.transitions td.enabled {background: #bfb;}
+@media screen {
+  table.fields_permissions td {
+    min-width: 100px;
+  }
+  table.transitions td {
+    min-width: 50px;
+  }
+  body.controller-issues div.autoscroll,
+  .sticky-table-wrapper {
+    max-height: 500px;
+  }
+}
+
+body.controller-issues div.autoscroll,
+.sticky-table-wrapper {
+  table-layout: fixed;
+  overflow-x: auto;
+  margin-bottom: 1.2em;
+  position: relative;
+}
+
+body.controller-issues div.autoscroll table.issues,
+.sticky-table-wrapper table {
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+body.controller-issues div.autoscroll table.issues thead tr td,
+body.controller-issues div.autoscroll table.issues thead tr th,
+.sticky-table-wrapper table tr.fixed-row td, .sticky-table-wrapper table tr.fixed-row th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+}
+.sticky-table-wrapper table td.fixed-column, .sticky-table-wrapper table th.fixed-column {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0px;
+  z-index: 9;
+  border-right: 1px solid #dfe8f1;
+}
+.sticky-table-wrapper table.workflows tr.fixed-row.status td {
+  top: 23px;
+  background-color: #fff;
+}
+.sticky-table-wrapper table.fields_permissions tr.fixed-row.group td {
+  top: 40px;
+  background-color: #fff;
+  border-top: 1px solid #dfe8f1;
+}
+.sticky-table-wrapper table.transitions tr.fixed-row.status td:not(.fixed-column) {
+  border-bottom: 1px solid #dfe8f1;
+}
+.sticky-table-wrapper table.workflows thead tr td.fixed-column, .sticky-table-wrapper table.workflows thead tr th.fixed-column {
+  z-index: 11;
+  white-space: nowrap;
+}
+.sticky-table-wrapper table.fields_permissions tr.fixed-row.group td.fixed-column {
+  z-index: 11;
+  white-space: nowrap;
+  border-right: none;
+  background-color: #fff;
+}
+.sticky-table-wrapper table tbody td.fixed-column, .sticky-table-wrapper table tbody th.fixed-column {
+  background-color: #fff;
+}
+.sticky-table-wrapper table.workflows tr:nth-child(odd) td.fixed-column {
+  background-color: #f6f7f8;
+}
+/* Only Safari */
+_::-webkit-full-page-media, _:future, :root .sticky-table-wrapper table.fields_permissions tr.fixed-row.group td {
+  top: 0px;
+}
+
 #workflow_form table select {font-size:90%; max-width:100px;}
 table.fields_permissions td.readonly {background:#ddd;}
 table.fields_permissions td.required {background:#d88;}
@@ -1819,6 +1893,8 @@ img.filecontent.image {background-image: url(../images/transparent.png);}
   #wiki_add_attachment { display:none; }
   .hide-when-print, .pagination ul.pages, .pagination .per-page { display: none !important; }
   .autoscroll {overflow-x: visible;}
+  body.controller-issues div.autoscroll table.issues,
+  .sticky-table-wrapper table { overflow-x: visible; overflow-y: visible; }
   table.list {margin-top:0.5em;}
   table.list th, table.list td {border: 1px solid #aaa;}
 }
