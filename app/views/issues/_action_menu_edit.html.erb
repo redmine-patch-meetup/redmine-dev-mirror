@@ -8,3 +8,27 @@
     <%= render :partial => 'edit' %>
   </div>
 <% end %>
+
+<% if @issue.notes_addable? %>
+  <%= labelled_form_for @issue, :html => {:id => 'issue-notes-form', :multipart => true} do |f| %>
+    <%= render :partial => 'conflict' if @conflict %>
+    <div class="box">
+      <fieldset><legend><%= l(:field_notes) %></legend>
+      <%= f.text_area :notes, :cols => 60, :rows => 4, :class => 'wiki-edit',
+            :data => {
+                :auto_complete => true
+            },
+            :no_label => true, :id => 'only-issue-notes' %>
+      <%= wikitoolbar_for 'only-issue-notes', preview_issue_path(:project_id => @project, :issue_id => @issue) %>
+
+      <% if @issue.safe_attribute? 'private_notes' %>
+      <%= f.check_box :private_notes, :no_label => true %> <label for="issue_private_notes"><%= l(:field_private_notes) %></label>
+      <% end %>
+
+      <%= call_hook(:view_issues_edit_notes_bottom, { :issue => @issue, :notes => @notes, :form => f }) %>
+      </fieldset>
+    </div>
+
+    <%= submit_tag l(:button_submit) %>
+  <% end %>
+<% end %>
