@@ -90,6 +90,27 @@ class Redmine::ApiTest::ProjectsTest < Redmine::ApiTest::Base
     assert_response :success
     assert_equal 'application/xml', @response.media_type
 
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Searchable field"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Database"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Float field"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Custom date"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Project 1 cf"]'
+  end
+
+  test "GET /projects.xml with include=issue_custom_fields should return custom fields based on role-based permissioning" do
+    field = IssueCustomField.find_by_name('Database')
+    field.update_attribute(:roles, [Role.find(1)])
+    # field.roles.push(Role.find(1))
+
+    user = User.find_by(:login => 'dlopper')
+    get '/projects.xml?include=issue_custom_fields', :headers => credentials(user.login)
+    assert_response :success
+    assert_equal 'application/xml', @response.media_type
+
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Searchable field"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Database"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Float field"]'
+    assert_select 'issue_custom_fields[type=array] custom_field[name="Custom date"]'
     assert_select 'issue_custom_fields[type=array] custom_field[name="Project 1 cf"]'
   end
 
