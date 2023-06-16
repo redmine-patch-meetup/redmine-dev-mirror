@@ -25,6 +25,11 @@ span.footer {
   font-size: 0.8em;
   font-style: italic;
 }
+span.recipients {
+  font-size: 0.8em;
+  font-style: italic;
+  color: #959595;
+}
 blockquote { font-style: italic; border-left: 3px solid #e0e0e0; padding-left: 0.6em; margin-left: 0;}
 blockquote blockquote { margin-left: 0;}
 pre, code {font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;}
@@ -78,5 +83,11 @@ table, td, th {
 <% if Setting.emails_footer.present? -%>
 <span class="footer"><%= Redmine::WikiFormatting.to_html(Setting.text_formatting, Setting.emails_footer).html_safe %></span>
 <% end -%>
+<% if Setting.show_recipients_in_mail_footer? && @recipients.present? %>
+<span class="recipients">
+  <%= l(:text_sent_email_to_recipients) %><br>
+  <%= show_recipients @recipients %>
+</span>
+<% end %>
 </body>
 </html>

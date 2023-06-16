@@ -514,6 +514,8 @@ en:
   setting_timelog_max_hours_per_day: Maximum hours that can be logged per day and user
   setting_timelog_accept_future_dates: Accept time logs on future dates
   setting_show_status_changes_in_mail_subject: Show status changes in issue mail notifications subject
+  setting_show_recipients_in_mail_footer: Show recipients in mail notifications footer
+  setting_show_recipients_limit: Maximum number of recipients in mail notifications footer
   setting_project_list_defaults: Projects list defaults
   setting_twofa: Two-factor authentication
 
@@ -1259,6 +1261,7 @@ en:
   text_issues_ref_in_commit_messages: Referencing and fixing issues in commit messages
   text_issue_added: "Issue %{id} has been reported by %{author}."
   text_issue_updated: "Issue %{id} has been updated by %{author}."
+  text_sent_email_to_recipients: The following recipients have also received this email.
   text_wiki_destroy_confirmation: Are you sure you want to delete this wiki and all its content?
   text_issue_category_destroy_question: "Some issues (%{count}) are assigned to this category. What do you want to do?"
   text_issue_category_destroy_assignments: Remove category assignments
